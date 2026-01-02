@@ -1,0 +1,208 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
+class InstagramService
+{
+    protected string $token;
+
+    public function __construct()
+    {
+        $this->token = config('services.instagram.token');
+    }
+
+    /**
+     * Mengambil media dengan penambahan Timeout 120 detik
+     */
+    public function getMedia($since = null, $until = null, bool $fetch = false, $token)
+    {
+        $allMedia = [];
+        $start = $since ?? strtotime("-1 year");
+        $end = $until ?? time();
+        $url = 'https://graph.instagram.com/me/media';
+        
+        $params = [
+            'fields' => 'id,caption,permalink,timestamp,media_type,like_count,comments_count,insights.metric(reach,views,impressions,saved,shares)',
+            'since' => $start,
+            'until' => $end,
+            'access_token' => $token,
+            'limit' => $fetch ? 100 : 15,
+        ];
+        
+        try {
+            // MENAMBAHKAN .timeout(120) agar koneksi tidak terputus saat paging banyak data
+            $response = Http::timeout(120)->withOptions(['verify' => false])->get($url, $params);
+            
+            if ($response->successful()) {
+                $json = $response->json();
+                $allMedia = $json['data'] ?? [];
+
+                if ($fetch) {
+                    while (isset($json['paging']['next'])) {
+                        // Early break jika sudah di luar rentang waktu
+                        if ($since) {
+                            $lastItem = end($allMedia);
+                            if (isset($lastItem['timestamp']) && strtotime($lastItem['timestamp']) < $since) {
+                                break;
+                            }
+                        }
+
+                        $nextResponse = Http::timeout(60)->withOptions(['verify' => false])->get($json['paging']['next']);
+                        
+                        if ($nextResponse->successful()) {
+                            $json = $nextResponse->json();
+                            $allMedia = array_merge($allMedia, $json['data'] ?? []);
+                            if (count($allMedia) >= 1000) break; 
+                        } else { break; }
+                    }
+                }
+            }
+
+            if ($since || $until) {
+                $allMedia = array_filter($allMedia, function($item) use ($since, $until) {
+                    $itemTime = strtotime($item['timestamp']);
+                    $checkSince = $since ? ($itemTime >= $since) : true;
+                    $checkUntil = $until ? ($itemTime <= $until) : true;
+                    return $checkSince && $checkUntil;
+                });
+            }
+
+            $data = [];
+            foreach ($allMedia as $item) {
+                $caption = $item['caption'] ?? "";
+                $judul = explode("\n", $caption)[0] ?? 'No Title';
+                $insightData = $item['insights']['data'] ?? [];
+                $insights = collect($insightData)->mapWithKeys(function ($insight) {
+                    return [$insight['name'] => $insight['values'][0]['value'] ?? 0];
+                });
+
+                $data[] = [
+                    'id' => $item['id'],
+                    'judul' => $judul,
+                    'tanggal_posting' => Carbon::parse($item['timestamp'])->format('Y-m-d'),
+                    'timestamp' => strtotime($item['timestamp']),
+                    'jenis_konten' => $item['media_type'] ?? 'UNKNOWN',
+                    'link_content' => $item['permalink'] ?? '#',
+                    'reach_count' => $insights->get('reach', 0),
+                    'save_count' => $insights->get('saved', 0),
+                    'share_count' => $insights->get('shares', 0),
+                    'like_count' => $item['like_count'] ?? 0,
+                    'comment_count' => $item['comments_count'] ?? 0,
+                    'impresi' => $insights->get('views', $insights->get('impressions', 0))
+                ];
+            }
+            return collect($data)->sortBy('timestamp')->values()->all();
+        } catch (\Exception $e) {
+            Log::error("Instagram Media Timeout/Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Mengambil Insights dengan optimasi Timeout dan pengecekan Paging
+     */
+    public function getInsights(string $mediaId, $since = null, $until = null, bool $fetch = false, $token)
+    {   
+        try {
+            // 1. Ambil ID Owner dengan Timeout
+            $resOwner = Http::timeout(30)->withOptions(['verify' => false])
+                ->get("https://graph.instagram.com/v24.0/{$mediaId}", [
+                    'fields' => 'owner',
+                    'access_token' => $token,
+                ]);
+            
+            if (!$resOwner->successful()) return [[], ['Followers_sebulan' => 0], []];
+            $ownerId = $resOwner->json()['owner']['id'];
+            
+            $start = $since ?? strtotime("-1 year");
+            $end = $until ?? time();
+
+            // 2. Ambil semua timestamp media
+            $resMedia = Http::timeout(60)->withOptions(['verify' => false])
+                ->get("https://graph.instagram.com/v24.0/{$ownerId}/media", [
+                    'fields' => 'timestamp',
+                    'limit' => $fetch ? 100 : 15,
+                    'since' => $start,
+                    'until' => $end,
+                    'access_token' => $token,
+                ]);
+            
+            $data_waktu = $resMedia->json()['data'] ?? [];
+            if (empty($data_waktu)) return [[], ['Followers_sebulan' => 0], []];
+
+            // 3. Ambil Data Follower dengan Timeout Panjang (Karena data 1 tahun berat)
+            $allFollowerValues = [];
+            $urlFollower = "https://graph.instagram.com/v24.0/{$ownerId}/insights";
+            $paramsFollower = [
+                'metric' => 'follower_count',
+                'period' => 'day',
+                'since' => $start,
+                'until' => $end,
+                'access_token' => $token,
+            ];
+
+            $resFollower = Http::timeout(120)->withOptions(['verify' => false])->get($urlFollower, $paramsFollower);
+
+            if ($resFollower->successful()) {
+                $json = $resFollower->json();
+                $allFollowerValues = $json['data'][0]['values'] ?? [];
+
+                while (isset($json['paging']['next'])) {
+                    // Beri timeout di setiap paging
+                    $resNext = Http::timeout(60)->withOptions(['verify' => false])->get($json['paging']['next']);
+                    if ($resNext->successful()) {
+                        $json = $resNext->json();
+                        $newValues = $json['data'][0]['values'] ?? [];
+                        $allFollowerValues = array_merge($allFollowerValues, $newValues);
+                    } else { break; }
+                }
+            }
+
+            // 4. Hitung Follower per Video
+            $resultFollowersPerVideo = [];
+            for ($i = 0; $i < count($data_waktu); $i++) {
+                $currentPostDate = strtotime($data_waktu[$i]['timestamp']);
+                $nextPostDate = ($i > 0) ? strtotime($data_waktu[$i-1]['timestamp']) : time();
+
+                $sumGained = 0;
+                foreach ($allFollowerValues as $day) {
+                    $dayTime = strtotime($day['end_time']);
+                    if ($dayTime >= $currentPostDate && $dayTime < $nextPostDate) {
+                        $sumGained += $day['value'];
+                    }
+                }
+                $resultFollowersPerVideo[] = ['followers_gained' => $sumGained];
+            }
+
+            // 5. Lokasi (Demographics)
+            $resLoc = Http::timeout(30)->withOptions(['verify' => false])
+                ->get("https://graph.instagram.com/v24.0/{$ownerId}/insights", [
+                    'metric' => 'follower_demographics',
+                    'period' => 'lifetime',
+                    'breakdown' => 'city',
+                    'access_token' => $token,
+                ]);
+            
+            $locationData = [];
+            if ($resLoc->successful()) {
+                $rawLoc = $resLoc->json()['data'][0]['values'][0]['value'] ?? [];
+                arsort($rawLoc);
+                $locationData = array_slice($rawLoc, 0, 10, true);
+            }
+
+            return [
+                0 => $resultFollowersPerVideo,
+                1 => ['Followers_sebulan' => array_sum(array_column($allFollowerValues, 'value'))],
+                2 => ['Top_Locations' => $locationData]
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("Instagram Insights Timeout/Error: " . $e->getMessage());
+            return [[], ['Followers_sebulan' => 0], []];
+        }
+    }   
+}

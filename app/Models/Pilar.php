@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Pilar extends Model
+{
+    protected $table = "pilar";
+    protected $fillable = [
+        "pilar",
+        "status"
+    ];
+}
