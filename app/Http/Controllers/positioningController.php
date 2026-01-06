@@ -30,7 +30,8 @@ class positioningController extends Controller
         Positioning::create([
             "produk_client_id" => $request->produk,
             "indikator" => $request->indikator,
-            "deskripsi" => $request->deskripsi
+            "deskripsi" => $request->deskripsi,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');
@@ -45,7 +46,8 @@ class positioningController extends Controller
         Positioning::findOrFail($id)->update([
             "produk_client_id" => $request->produk,
             "indikator" => $request->indikator,
-            "deskripsi" => $request->deskripsi
+            "deskripsi" => $request->deskripsi,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');

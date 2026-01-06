@@ -28,7 +28,8 @@ class moodBoardController extends Controller
         
         DB::table("moodboard")->insert([
             'produk_client_id' => $request->produk,
-            'moodboard'     => $path
+            'moodboard'     => $path,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Moodboard berhasil disimpan!');

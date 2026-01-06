@@ -22,7 +22,7 @@
                 <div class="modal-body p-4 bg-light">
                     <!-- SECTION: PILIH PRODUK -->
                     <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                    <input type="hidden" name="platform" value="{{ $platform }}">
                     <div class="row g-4">
                         <!-- KOLOM KIRI: DEMOGRAFI & GEOGRAFI -->
                         <div class="col-lg-6">
@@ -149,7 +149,7 @@
                         
                         <!-- BAGIAN PRODUK -->
                         <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                        <input type="hidden" name="platform" value="{{ $platform }}">
                         <div class="row g-4">
                             <!-- KOLOM KIRI: DEMOGRAFI & GEOGRAFI -->
                             <div class="col-lg-6">

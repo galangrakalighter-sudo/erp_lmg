@@ -12,7 +12,8 @@ class gayaKomunikasiController extends Controller
         DB::table('gaya_komunikasi')->insert([
             "produk_client_id" => $request->produk,
             "gaya_bicara" => $request->gaya_bicara,
-            "gaya_bahasa" => $request->gaya_bahasa
+            "gaya_bahasa" => $request->gaya_bahasa,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -26,7 +27,8 @@ class gayaKomunikasiController extends Controller
         DB::table("gaya_komunikasi")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
             "gaya_bicara" => $request->gaya_bicara,
-            "gaya_bahasa" => $request->gaya_bahasa
+            "gaya_bahasa" => $request->gaya_bahasa,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

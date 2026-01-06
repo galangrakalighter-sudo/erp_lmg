@@ -285,41 +285,46 @@
 $(document).ready(function() {
     const allPlatforms = ["Tiktok", "Instagram", "Facebook", "Youtube"];
 
-    // Fungsi untuk memperbarui pilihan yang tersedia di setiap select
     function updateOptions() {
-        let selectedValues = [];
-        
-        // Ambil semua value yang sudah dipilih
-        $('.platform-select').each(function() {
-            if ($(this).val()) {
-                selectedValues.push($(this).val());
-            }
-        });
-
-        // Loop setiap select untuk menyembunyikan option yang sudah dipilih di tempat lain
-        $('.platform-select').each(function() {
-            let currentVal = $(this).val();
+        // Kita perlu updateOptions secara spesifik per Modal agar tidak bentrok antar modal
+        $('.modal').each(function() {
+            let $modal = $(this);
+            let selectedValues = [];
             
-            $(this).find('option').each(function() {
-                let optVal = $(this).val();
-                if (optVal !== "" && optVal !== currentVal && selectedValues.includes(optVal)) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
+            $modal.find('.platform-select').each(function() {
+                if ($(this).val()) {
+                    selectedValues.push($(this).val());
                 }
             });
-        });
 
-        // Sembunyikan tombol tambah jika semua platform sudah dipilih
-        if (selectedValues.length >= allPlatforms.length) {
-            $('.add-platform').hide();
-        } else {
-            $('.add-platform').show();
-        }
+            $modal.find('.platform-select').each(function() {
+                let currentVal = $(this).val();
+                $(this).find('option').each(function() {
+                    let optVal = $(this).val();
+                    if (optVal !== "" && optVal !== currentVal && selectedValues.includes(optVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+
+            // Sembunyikan tombol tambah di modal ini jika platform sudah penuh
+            if (selectedValues.length >= allPlatforms.length) {
+                $modal.find('.add-platform, .add-platform-edit').hide();
+            } else {
+                $modal.find('.add-platform, .add-platform-edit').show();
+            }
+        });
     }
 
-    // Event Klik Tombol Tambah
+    // Event Klik Tombol Tambah (Dinamis untuk Tambah & Edit)
     $(document).on('click', '.add-platform, .add-platform-edit', function() {
+        // Ambil target container dari atribut data-target
+        // Jika tidak ada (untuk modal tambah), default ke #platform-container
+        let targetSelector = $(this).data('target') || '#platform-container';
+        let $container = $(targetSelector);
+
         let newRow = `
             <div class="platform-row mb-2 mt-2">
                 <div class="input-group">
@@ -333,7 +338,8 @@ $(document).ready(function() {
                     </div>
                 </div>
             </div>`;
-        $('#platform-container').append(newRow);
+        
+        $container.append(newRow);
         updateOptions();
     });
 
@@ -347,6 +353,9 @@ $(document).ready(function() {
     $(document).on('change', '.platform-select', function() {
         updateOptions();
     });
+
+    // Jalankan sekali saat load untuk inisialisasi modal edit yang sudah ada datanya
+    updateOptions();
 });
 </script>
 @include('partials.footer')

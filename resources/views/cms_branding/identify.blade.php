@@ -21,7 +21,7 @@
                     <div class="modal-body p-4">
                         <div class="row">
                             <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                            <input type="hidden" name="platform" value="{{ $platform }}">
                             <div class="col-md-12 mb-3">
                                 <label class="font-weight-bold text-dark">Pilih Gambar Identify</label>
                                 <div class="input-group">
@@ -80,7 +80,7 @@
                             <div class="row">
                                 {{-- Hidden ID Produk --}}
                                 <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                                <input type="hidden" name="platform" value="{{ $platform }}">
                                 <div class="col-md-12 mb-3">
                                     <label class="font-weight-bold text-dark">Ganti Gambar Identify</label>
                                     <div class="input-group">

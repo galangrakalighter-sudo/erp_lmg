@@ -24,7 +24,7 @@ class MarketResearchServiceImplement extends ServiceApi implements MarketResearc
      * because used in extends service class
      */
 
-    public function getMarket(int $id)
+    public function getMarket(int $id, string $platform)
     {
         $data = [];
         $jumlah = [];
@@ -34,6 +34,7 @@ class MarketResearchServiceImplement extends ServiceApi implements MarketResearc
           $market = DB::table($getData[$i])
                     ->join('produk_client', 'produk_client.id', '=', $getData[$i].'.produk_client_id')
                     ->where($getData[$i].'.produk_client_id', $id)
+                    ->where($getData[$i].'.platform', $platform)
                     ->select('produk_client.nama', $getData[$i].'.*')
                     ->get();
           array_push($data, $market);
@@ -41,6 +42,7 @@ class MarketResearchServiceImplement extends ServiceApi implements MarketResearc
           $jumlahData = DB::table($getData[$i])
                     ->select('produk_client_id', DB::raw('count(*) as total'))
                     ->where('produk_client_id', $id)
+                    ->where('platform', $platform)
                     ->groupBy('produk_client_id')
                     ->get();
 

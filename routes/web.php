@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/terms-privacy-policy', function(){
+    return view('privacy');
+});
 Route::middleware('auth')->group(function() {
     // Dashboard
     Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
@@ -13,15 +16,15 @@ Route::middleware('auth')->group(function() {
     Route::get('/analisis/{id_produk}/{platform}', [App\Http\Controllers\AnalisisController::class, 'index'])->name('analisis');
 
     // Market Research
-    Route::get('/market_research/{id_produk}', [App\Http\Controllers\marketResearchController::class, 'index'])->name('market_research');
+    Route::get('/market_research/{id_produk}/{platform}', [App\Http\Controllers\marketResearchController::class, 'index'])->name('market_research');
     
     // Branding
-    Route::get('/branding/{id_produk}', [App\Http\Controllers\brandingController::class, 'index'])->name('branding');
+    Route::get('/branding/{id_produk}/{platform}', [App\Http\Controllers\brandingController::class, 'index'])->name('branding');
 
     // CMS MANAJEMEN`
 
     // Manajemen Konten
-    Route::get("/manajemen/{id_produk}", [App\Http\Controllers\ManajemenKontenController::class, 'index'])->name('manajemen');
+    Route::get("/manajemen/{id_produk}/{platform}", [App\Http\Controllers\ManajemenKontenController::class, 'index'])->name('manajemen');
     Route::post("/manajemen/{id_produk}/create", [App\Http\Controllers\ManajemenKontenController::class, 'store'])->name('manajemen_create');
     Route::post("/manajemen/{id_produk}/edit", [App\Http\Controllers\ManajemenKontenController::class, 'update'])->name('manajemen_update');
     Route::post("/manajemen/{id_produk}/delete", [App\Http\Controllers\ManajemenKontenController::class, 'destroy'])->name('manajemen_delete');

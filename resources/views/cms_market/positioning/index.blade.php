@@ -16,7 +16,7 @@
                     <div class="modal-body p-4">
                         <div class="row">
                             <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                            <input type="hidden" name="platform" value="{{ $platform }}">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold text-dark">Indikator</label>
                                 <div class="input-group">
@@ -62,7 +62,7 @@
                         <div class="modal-body p-4">
                             <div class="row">
                                 <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                                <input type="hidden" name="platform" value="{{ $platform }}">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold small text-muted text-uppercase">Indikator</label>
                                     <div class="input-group">

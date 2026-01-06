@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ManajemenKontenController extends Controller
 {
-    public function index($produk){
+    public function index($produk, $platform){
         $nama_produk = DB::table('produk_client')->where('id', $produk)->first();
         $kategory = DB::table("kategori_jasa")->where('id', $nama_produk->kategori_jasa_id)->first();
         
@@ -20,6 +20,7 @@ class ManajemenKontenController extends Controller
         ->join('jenis_body', 'jenis_body.id', '=', 'data_jasa.body_id')
         ->join('jenis_cta', 'jenis_cta.id', '=', 'data_jasa.cta_id')
         ->where('data_jasa.produk_client_id', $produk)
+        ->where('data_jasa.platform', $platform)
         ->select('data_jasa.*', 'type_produk.type', 'strategy.strategy', 'status.nama_status', 'pilar.pilar', 'hooks.hooks', 'jenis_body.nama_body', 'jenis_cta.nama_cta')
         ->get();
 
@@ -28,7 +29,7 @@ class ManajemenKontenController extends Controller
 
         $option = [];
 
-        $title = "Manajemen " . $nama_produk->nama;
+        $title = "Manajemen Konten " . $nama_produk->nama;
 
         foreach($table as $tab){
             $datatable = DB::table($tab);
@@ -39,7 +40,7 @@ class ManajemenKontenController extends Controller
             }
             $option[$tab] = $datatable->where('status', 1)->get();
         }
-        return view("manajemen.index", compact('data', 'nama_produk', 'option', 'title', 'kategory'));
+        return view("manajemen.index", compact('data', 'nama_produk', 'option', 'title', 'kategory', 'platform'));
     }
 
     public function store($id, Request $request){
@@ -55,6 +56,7 @@ class ManajemenKontenController extends Controller
         $request->validate([
             'judul'             => 'required|string|max:255',
             'inspirasi'         => 'nullable|string',
+            'platform'          => 'nullable|string',
             'type'              => 'required|integer',
             'strategy'          => 'required|integer',
             'pilar'             => 'required|integer',
@@ -90,6 +92,7 @@ class ManajemenKontenController extends Controller
                 'tanggal_deadline' => $request->tanggal_deadline,
                 'link'             => $request->link,
                 'status_id'        => $value['status'],
+                'platform'         => $request->platform,
                 'created_at'       => now(),
                 'updated_at'       => now(),
             ]);
@@ -113,6 +116,7 @@ class ManajemenKontenController extends Controller
         $request->validate([
             'judul'             => 'required|string|max:255',
             'inspirasi'         => 'nullable|string',
+            'platform'          => 'nullable|string',
             'type'              => 'required|integer',
             'strategy'          => 'required|integer',
             'pilar'             => 'required|integer',
@@ -147,6 +151,7 @@ class ManajemenKontenController extends Controller
                 'tanggal_deadline' => $request->tanggal_deadline,
                 'link'             => $request->link,
                 'status_id'        => $value['status'],
+                'platform'         => $request->platform,
                 'created_at'       => now(),
                 'updated_at'       => now(),
             ]);

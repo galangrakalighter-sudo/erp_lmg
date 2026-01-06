@@ -20,7 +20,7 @@
                     <div class="row">
                         {{-- Field Produk --}}
                         <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                        <input type="hidden" name="platform" value="{{ $platform }}">
                         {{-- Field Nama Analisis --}}
                         <div class="col-md-12 mb-3">
                             <label class="font-weight-bold text-dark">Nama Brand Value</label>
@@ -79,7 +79,7 @@
                         <div class="row">
                             {{-- Field Produk (Pre-selected) --}}
                             <input type="hidden" name="produk" value="{{ $produk->id }}">
-
+                            <input type="hidden" name="platform" value="{{ $platform }}">
                             {{-- Field Nama Brand Image (Pre-filled) --}}
                             <div class="col-md-12 mb-3">
                                 <label class="font-weight-bold text-dark">Nama Brand Image</label>

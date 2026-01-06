@@ -12,7 +12,8 @@ class komposisiController extends Controller
         DB::table('komposisi')->insert([
             "produk_client_id" => $request->produk,
             "type_komposisi" => $request->type,
-            "komposisi" => $request->komposisi
+            "komposisi" => $request->komposisi,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -26,7 +27,8 @@ class komposisiController extends Controller
         DB::table("komposisi")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
             "type_komposisi" => $request->type,
-            "komposisi" => $request->komposisi
+            "komposisi" => $request->komposisi,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

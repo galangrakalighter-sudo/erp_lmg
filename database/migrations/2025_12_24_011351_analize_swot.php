@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('weakness')->nullable();
             $table->string('oportunity')->nullable();
             $table->string('threat')->nullable();
+            $table->string('platform')->nullable();
             $table->timestamps();
         });
     }

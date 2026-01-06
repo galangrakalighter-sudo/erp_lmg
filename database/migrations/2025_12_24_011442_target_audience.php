@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('status_sosial')->nullable();
             $table->string('penggunaan')->nullable();
             $table->string('manfaat')->nullable();
+            $table->string('platform')->nullable();
             $table->timestamps();
         });
     }

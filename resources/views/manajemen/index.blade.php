@@ -89,7 +89,7 @@
             <div class="modal-content border-0 shadow-lg">
                 <form action="{{ route('manajemen_create', $nama_produk->id) }}" method="POST">
                     @csrf
-
+                    <input type="hidden" name="platform" value={{ $platform }}>
                     <!-- HEADER: Menggunakan gradient dan padding yang lebih luas -->
                     <div class="modal-header bg-gradient-primary text-white py-3">
                         <div class="d-flex align-items-center">

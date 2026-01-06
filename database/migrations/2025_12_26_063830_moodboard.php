@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('produk_client_id')->constrained("produk_client")->cascadeOnDelete();
             $table->string('moodboard');
+            $table->string('platform');
             $table->timestamps();
         });
     }

@@ -14,6 +14,7 @@
                     @csrf
                     <div class="modal-body p-4">
                         <input type="hidden" name="produk" value="{{ $produk->id }}">
+                        <input type="hidden" name="platform" value="{{ $platform }}">
                         
                         <div class="form-group">
                             <label class="font-weight-bold">Nama Analisis</label>
@@ -62,7 +63,7 @@
                     @csrf
                     <div class="modal-body p-4">
                         <input type="hidden" name="produk" value="{{ $produk->id }}">
-                        
+                        <input type="hidden" name="platform" value="{{ $platform }}">
                         <div class="form-group">
                             <label class="font-weight-bold">Nama Jenis Body</label>
                             <input type="text" name="nama" class="form-control border-info" value="{{ $item->nama_analisis }}">

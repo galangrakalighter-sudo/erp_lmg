@@ -29,7 +29,8 @@ class brandIdentifyController extends Controller
         
         DB::table("brand_identify")->insert([
             'produk_client_id' => $request->produk,
-            'identify'     => $path
+            'identify'     => $path,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Moodboard berhasil disimpan!');

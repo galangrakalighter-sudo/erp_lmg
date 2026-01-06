@@ -11,7 +11,8 @@ class alatBrandingController extends Controller
         // dd($request->all());
         DB::table('alat_branding')->insert([
             "produk_client_id" => $request->produk,
-            "nama_alat" => $request->nama
+            "nama_alat" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -24,7 +25,8 @@ class alatBrandingController extends Controller
     {
         DB::table("alat_branding")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
-            "nama_alat" => $request->nama
+            "nama_alat" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

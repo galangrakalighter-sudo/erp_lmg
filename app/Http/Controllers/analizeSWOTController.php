@@ -35,7 +35,8 @@ class analizeSWOTController extends Controller
             'strenght' => $request->strenght,
             'weakness' => $request->weakness,
             'oportunity' => $request->oportunity,
-            'threat' => $request->threat
+            'threat' => $request->threat,
+            "platform" => $request->platform
         ]);
         return redirect()->back()->with('success', 'Berhasil Di Simpan');
     }
@@ -54,7 +55,8 @@ class analizeSWOTController extends Controller
             'strenght'         => $request->strenght, 
             'weakness'         => $request->weakness,
             'oportunity'       => $request->oportunity,
-            'threat'           => $request->threat
+            'threat'           => $request->threat,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('produk_client_id')->constrained("produk_client")->cascadeOnDelete();
             $table->string('gaya_bicara');
             $table->string('gaya_bahasa');
+            $table->string('platform');
             $table->timestamps();
         });
     }

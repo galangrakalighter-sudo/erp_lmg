@@ -23,6 +23,7 @@ class analize4PController extends Controller
             'produk_client_id' => $request->produk,
             "nama_analisis" => $request->nama,
             "type" => $request->type,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
@@ -32,7 +33,8 @@ class analize4PController extends Controller
         DB::table('analize_4p')->where('id', $id)->update([
             "produk_client_id" => $request->produk,
             "nama_analisis" => $request->nama,
-            "type" => $request->type
+            "type" => $request->type,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');

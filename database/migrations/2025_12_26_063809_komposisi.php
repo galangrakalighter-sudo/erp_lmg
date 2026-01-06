@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('produk_client_id')->constrained("produk_client")->cascadeOnDelete();
             $table->string('type_komposisi');
             $table->string('komposisi');
+            $table->string('platform');
             $table->timestamps();
         });
     }

@@ -13,8 +13,8 @@ class marketResearchController extends Controller
         $this->market = $market;
     }
 
-    public function index($id){
-        $data = $this->market->getMarket((int)$id);
+    public function index($id, $platform){
+        $data = $this->market->getMarket((int)$id, $platform);
         $title = "Market Research";
         // dd($data['data']);
         $arr=[];
@@ -23,6 +23,6 @@ class marketResearchController extends Controller
         }
         $produk = DB::table('produk_client')->where('id', $id)->first();
         // dd($arr);
-        return view('market.index', compact('data', 'title', 'produk'));
+        return view('market.index', compact('data', 'title', 'produk', 'platform'));
     }
 }

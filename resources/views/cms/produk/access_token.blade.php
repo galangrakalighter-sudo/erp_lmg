@@ -3,46 +3,89 @@
 <style>
     :root {
         --bs-primary: #4f46e5;
-        --bs-primary-rgb: 79, 70, 229;
+        --facebook-blue: #0866FF;
+        --instagram-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        --slate-100: #f1f5f9;
+        --slate-500: #64748b;
     }
 
     .main-instruction-wrapper {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        padding-top: 3rem;
+        padding-top: 2rem;
         padding-bottom: 4rem;
+        background-color: #f8fafc;
     }
 
+    /* Platform Switcher Style */
+    .platform-selector {
+        background: #e2e8f0;
+        padding: 0.4rem;
+        border-radius: 16px;
+        display: inline-flex;
+        gap: 0.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .platform-btn {
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--slate-500);
+        background: transparent;
+    }
+
+    /* Active State Themes */
+    .platform-btn.active[data-platform="instagram"] {
+        background: white;
+        color: #dc2743;
+        box-shadow: 0 4px 12px rgba(220, 39, 67, 0.15);
+    }
+
+    .platform-btn.active[data-platform="facebook"] {
+        background: white;
+        color: var(--facebook-blue);
+        box-shadow: 0 4px 12px rgba(8, 102, 255, 0.15);
+    }
+
+    /* Main Card Layout */
     .main-card {
         background: white;
-        border-radius: 40px;
+        border-radius: 32px;
         border: 1px solid #e2e8f0;
-        padding: 3rem;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-        min-height: 600px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.03);
+        min-height: 650px;
         display: flex;
         flex-direction: column;
-        transition: all 0.3s ease;
+        transition: border-top 0.3s ease;
     }
+
+    .main-card.theme-instagram { border-top: 6px solid #dc2743; }
+    .main-card.theme-facebook { border-top: 6px solid var(--facebook-blue); }
 
     .step-indicator-text {
         color: var(--bs-primary);
         font-weight: 800;
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 1rem;
-        display: block;
+        letter-spacing: 0.05em;
     }
 
-    /* CONTAINER GAMBAR INSTRUKSI */
+    /* Image Container */
     .step-image-wrapper {
         background-color: #f8fafc;
-        border-radius: 24px;
+        border-radius: 20px;
         border: 2px dashed #e2e8f0;
         margin: 1.5rem 0;
         overflow: hidden;
         position: relative;
-        min-height: 350px;
+        min-height: 380px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -53,15 +96,15 @@
         height: auto;
         max-height: 400px;
         object-fit: contain;
-        display: none; /* Muncul via JS */
-        padding: 1rem;
+        display: none;
+        padding: 1.5rem;
     }
 
-    .image-loader {
-        position: absolute;
-        color: #94a3b8;
-        text-align: center;
+    .icon-box {
+        transition: all 0.3s ease;
     }
+    .icon-box-ig { background: #fff5f7; color: #dc2743; }
+    .icon-box-fb { background: #ebf5ff; color: var(--facebook-blue); }
 
     .tips-box {
         background-color: #fffbeb;
@@ -73,14 +116,14 @@
     }
 
     .btn-step-nav {
-        padding: 0.75rem 2rem;
+        padding: 0.8rem 2rem;
         border-radius: 14px;
         font-weight: 700;
         transition: all 0.2s;
     }
 
     @media (max-width: 768px) {
-        .main-card { padding: 1.5rem; border-radius: 24px; }
+        .main-card { padding: 1.5rem; min-height: auto; }
         .step-image-wrapper { min-height: 250px; }
     }
 </style>
@@ -89,13 +132,24 @@
     <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-8">
             
-            <div class="text-center mb-4">
-                <span class="step-indicator-text">Langkah <span id="current-step-num">1</span> dari 10</span>
+            <div class="text-center">
+                <div class="platform-selector">
+                    <button class="platform-btn active" data-platform="instagram" onclick="switchPlatform('instagram')">
+                        <i data-lucide="instagram"></i> Instagram
+                    </button>
+                    <button class="platform-btn" data-platform="facebook" onclick="switchPlatform('facebook')">
+                        <i data-lucide="facebook"></i> Facebook
+                    </button>
+                </div>
             </div>
 
-            <div class="main-card">
+            <div class="text-center mb-4">
+                <span class="step-indicator-text">Langkah <span id="current-step-num">1</span> dari <span id="total-steps-num">10</span></span>
+            </div>
+
+            <div class="main-card theme-instagram" id="instruction-card">
                 <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="p-3 bg-light rounded-4 text-primary" id="step-icon-container">
+                    <div class="p-3 rounded-4 icon-box icon-box-ig" id="step-icon-container">
                         <i data-lucide="globe" class="size-32"></i>
                     </div>
                     <div>
@@ -106,7 +160,7 @@
 
                 <div class="flex-grow-1 mb-5">
                     <p class="fs-5 text-secondary leading-relaxed" id="step-description">
-                        Sedang memuat instruksi langkah...
+                        Sedang memuat instruksi...
                     </p>
                     
                     <div class="step-image-wrapper">
@@ -141,142 +195,106 @@
 </div>
 
 <script>
-    const steps = [
-        {
-            id: 1,
-            title: "Login",
-            icon: "globe",
-            desc: "Login Ke Meta Developer",
-            tips: "Gunakan Akun Lighter Production",
-            image: "{{ asset('img/langkah1.png') }}" 
-        },
-        {
-            id: 2,
-            title: "Pindah Halaman",
-            icon: "shield-check",
-            desc: "Tekan Tombol Aplikasi Saya",
-            tips: "Tidak ada catatan",
-            image: "{{ asset('img/langkah2.png')}}"
-        },
-        {
-            id: 3,
-            title: "Pilih Aplikasi",
-            icon: "key",
-            desc: "Pilih Aplikasi yang akan digunakan untuk dijadikan tempat Penyimpanan API",
-            tips: "Pastikan sudah Membuat Aplikasi terlebih dahulu",
-            image: "{{ asset('img/langkah3.png') }}"
-        },
-        {
-            id: 4,
-            title: "Siapkan Produk Instagram",
-            icon: "check-circle",
-            desc: "Pilih Instagram untuk di siapkan",
-            tips: "Untuk Saat ini hanya bisa Instagram saja",
-            image: "{{ asset('img/Langkah4.png') }}"
-        },
-        {
-            id: 5,
-            title: "Tampilan",
-            icon: "check-circle",
-            desc: "Tampilannya akan menjadi Seperti ini",
-            tips: "Muncul Instagram",
-            image: "{{ asset('img/Langkah5.png') }}"
-        },
-        {
-            id: 6,
-            title: "Tambah Akun",
-            icon: "check-circle",
-            desc: "Tambah Akun yang akan di sambungkan instagramnya, ke menu peran aplikasi dan peran",
-            tips: "Pastikan Akun yang ditambahkan itu benar dan set akun itu sebagai penguji Instagram",
-            image: "{{ asset('img/Langkah6.png') }}"
-        },
-        {
-            id: 7,
-            title: "Pergi ke Instagram",
-            icon: "check-circle",
-            desc: "Pergi ke Instagram yang di sambungkan sebelumnya",
-            tips: "Pergi ke Setting dan ke Website Permission lalu Apps and Website, menuju Tester Invites",
-            image: "{{ asset('img/Langkah7.png') }}"
-        },
-        {
-            id: 8,
-            title: "Perizinan",
-            icon: "check-circle",
-            desc: "Aktifkan Semua opsi lalu simpan",
-            tips: "Pastikan Sudah diaktifkan semuanya",
-            image: "{{ asset('img/Langkah8.png') }}"
-        },
-        {
-            id: 9,
-            title: "Tampilan",
-            icon: "check-circle",
-            desc: "Kembali ke Meta Developer, Pilih Instagram di sidebar lalu penyiapan api yang pertama dan Buat Token",
-            tips: "Pastikan Akun sudah Tersambung",
-            image: "{{ asset('img/Langkah9.png') }}"
-        },
-        {
-            id: 10,
-            title: "Salin Token",
-            icon: "check-circle",
-            desc: "Salin Token dan Masukan di inputan Form Access Token",
-            tips: "Cek Terlebih dahulu untuk jangka waktu token nya kadaluarsa di https://developers.facebook.com/tools/explorer/",
-            image: "{{ asset('img/Langkah9.png') }}"
-        }
-    ];
+    const instructionData = {
+        instagram: [
+            { id: 1, title: "Login Meta", icon: "globe", desc: "Login Ke Meta Developer menggunakan akun yang sudah tersambung dengan Instagram Business.", tips: "Gunakan Akun Lighter Production", image: "{{ asset('img/langkah1.png') }}" },
+            { id: 2, title: "Pindah Halaman", icon: "layout-grid", desc: "Tekan tombol 'Aplikasi Saya' di pojok kanan atas.", tips: "Pastikan Anda sudah masuk ke dashboard developer", image: "{{ asset('img/langkah2.png') }}" },
+            { id: 3, title: "Pilih Aplikasi", icon: "smartphone", desc: "Pilih aplikasi yang akan digunakan sebagai penyimpan API Instagram.", tips: "Gunakan aplikasi yang statusnya sudah 'Live' atau 'In Development'", image: "{{ asset('img/langkah3.png') }}" },
+            { id: 4, title: "Siapkan Produk", icon: "layers", desc: "Cari produk Instagram di sidebar dan pilih 'Siapkan'.", tips: "Gunakan Instagram Graph API untuk akses data konten", image: "{{ asset('img/Langkah4.png') }}" },
+            { id: 5, title: "Tambah Akun Penguji", icon: "user-plus", desc: "Tambahkan akun Instagram ke menu Peran > Penguji Instagram.", tips: "Akun tersebut harus menerima undangan di setting Instagram-nya", image: "{{ asset('img/Langkah6.png') }}" },
+            { id: 6, title: "Terima Undangan", icon: "mail-check", desc: "Buka Instagram > Settings > Website Permissions > Apps & Websites > Tester Invites.", tips: "Klik 'Accept' pada nama aplikasi Anda", image: "{{ asset('img/Langkah7.png') }}" },
+            { id: 7, title: "Generate Token", icon: "key", desc: "Kembali ke Meta Developer, masuk ke Instagram > Penyiapan API > Klik 'Generate Token'.", tips: "Simpan token ini di tempat yang aman", image: "{{ asset('img/Langkah9.png') }}" },
+            { id: 8, title: "Salin Token", icon: "copy", desc: "Salin token yang muncul dan masukkan ke kolom input yang tersedia di sistem.", tips: "Cek masa berlaku token di Access Token Debugger", image: "{{ asset('img/Langkah10.png') }}" }
+        ],
+        facebook: [
+            { id: 1, title: "Login Meta", icon: "globe", desc: "Buka Portal Developer Facebook dan login dengan akun pengelola Fanspage.", tips: "Gunakan Akun Lighter Production", image: "{{ asset('img/langkah1.png') }}" },
+            { id: 2, title: "Pindah Halaman", icon: "layout-grid", desc: "Tekan tombol 'Aplikasi Saya' di pojok kanan atas.", tips: "Pastikan Anda sudah masuk ke dashboard developer", image: "{{ asset('img/langkah2.png') }}" },
+            { id: 3, title: "Pilih Aplikasi", icon: "smartphone", desc: "Pilih aplikasi yang akan digunakan'.", tips: "Gunakan aplikasi yang statusnya sudah 'Live' atau 'In Development'", image: "{{ asset('img/langkah3.png') }}" },
+            { id: 4, title: "Pindah Halaman", icon: "layout-grid", desc: "Tekan tombol Graph API Explorer.", tips: "", image: "{{ asset('img/fb_langkah4.png') }}" },
+            { id: 5, title: "Generate Access Token", icon: "layout-grid", desc: "Tekan token pengguna lalu pilih dapatkan token akses pengguna.", tips: "Pastikan Akun yang terlogin itu adalah pusat akun", image: "{{ asset('img/fb_langkah5.png') }}" },
+            { id: 6, title: "Pilih Akun yang tersambung", icon: "layout-grid", desc: "Pilih Akun yang terhubung dengan pusat akun.", tips: "Pastikan memilih akun yang tepat", image: "{{ asset('img/fb_langkah6.png') }}" },
+            { id: 7, title: "Pilih Izin yang digunakan", icon: "layout-grid", desc: "tekan tombol tambahkan izin lalu generate access token.", tips: "izin yang dipilih harus pages_manage_engagement, pages_manage_posts, pages_read_management, pages_read_user_content, pages_show_list, dan read_insights", image: "{{ asset('img/fb_langkah7.png') }}" },
+            { id: 8, title: "Output", icon: "layout-grid", desc: "Ganti me?fields dengan me/accounts.", tips: "Pastikan Akun yang ingin dihubungkan benar", image: "{{ asset('img/fb_langkah8.png') }}" },
+            { id: 9, title: "Salin Acces token", icon: "layout-grid", desc: "Salin Aksen token yang terdapat pada output lalu pindah ke halaman debugger Token Access.", tips: "Pastikan access token yang di salin sesuai dengan data akun yang ingin di tampilkan", image: "{{ asset('img/fb_langkah9.png') }}" },
+            { id: 10, title: "Dapat Token", icon: "layout-grid", desc: "Tempelkan Token yang sebelumnya di salin lalu debug dan perpanjang token akses. Salin Token Access lalu masukan ke kolom input platforn facebook yang tersedia di sistem.", tips: "", image: "{{ asset('img/fb_langkah10.png') }}" }
+        ]
+    };
 
+    let activePlatform = 'instagram';
     let currentStep = 0;
 
-    function updateUI() {
-        const step = steps[currentStep];
+    function switchPlatform(platform) {
+        activePlatform = platform;
+        currentStep = 0;
         
-        // Update Elemen Teks
+        // Update UI Button Active
+        document.querySelectorAll('.platform-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.platform === platform);
+        });
+
+        // Update Theme Card & Icon Box
+        const card = document.getElementById('instruction-card');
+        const iconBox = document.getElementById('step-icon-container');
+        
+        if(platform === 'instagram') {
+            card.className = 'main-card theme-instagram';
+            iconBox.className = 'p-3 rounded-4 icon-box icon-box-ig';
+        } else {
+            card.className = 'main-card theme-facebook';
+            iconBox.className = 'p-3 rounded-4 icon-box icon-box-fb';
+        }
+
+        updateUI();
+    }
+
+    function updateUI() {
+        const platformSteps = instructionData[activePlatform];
+        const step = platformSteps[currentStep];
+        
+        // Update Teks & Counter
         document.getElementById('current-step-num').innerText = currentStep + 1;
+        document.getElementById('total-steps-num').innerText = platformSteps.length;
         document.getElementById('step-label').innerText = `Langkah ${step.id}`;
         document.getElementById('step-title').innerText = step.title;
         document.getElementById('step-description').innerText = step.desc;
         document.getElementById('step-tips').innerText = step.tips;
 
-        // Logika Pemuatan Gambar
+        // Logika Gambar
         const imgElement = document.getElementById('step-visual');
         const loader = document.getElementById('img-loader');
         
-        imgElement.style.display = 'none'; // Sembunyikan gambar lama
-        loader.style.display = 'block';    // Tampilkan loader (spinner)
-        
+        imgElement.style.display = 'none';
+        loader.style.display = 'block';
         imgElement.src = step.image;
-        imgElement.onload = function() {
+        imgElement.onload = () => {
             loader.style.display = 'none';
             imgElement.style.display = 'block';
         };
 
-        // Update Icon Lucide
-        const iconCont = document.getElementById('step-icon-container');
-        iconCont.innerHTML = `<i data-lucide="${step.icon}" style="width:32px; height:32px"></i>`;
+        // Update Icon
+        document.getElementById('step-icon-container').innerHTML = `<i data-lucide="${step.icon}" style="width:32px; height:32px"></i>`;
 
-        // Atur Navigasi Tombol
+        // Tombol Navigasi
         document.getElementById('btn-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
         
         const btnNext = document.getElementById('btn-next');
-        if (currentStep === steps.length - 1) {
+        if (currentStep === platformSteps.length - 1) {
             btnNext.innerHTML = 'Selesai <i data-lucide="check" class="ms-2"></i>';
-            btnNext.classList.remove('btn-primary');
-            btnNext.classList.add('btn-success');
+            btnNext.classList.replace('btn-primary', 'btn-success');
         } else {
             btnNext.innerHTML = 'Langkah Selanjutnya <i data-lucide="chevron-right" class="ms-2"></i>';
-            btnNext.classList.remove('btn-success');
-            btnNext.classList.add('btn-primary');
+            btnNext.classList.replace('btn-success', 'btn-primary');
         }
 
-        // Re-render ikon Lucide
         lucide.createIcons();
     }
 
     function nextStep() {
-        if (currentStep < steps.length - 1) {
+        if (currentStep < instructionData[activePlatform].length - 1) {
             currentStep++;
             updateUI();
         } else {
-            // Aksi Selesai (Misal: Redirect)
+            // Redirect Selesai
             window.location.href = `{{ route('cms.produk', 'LGTR') }}`;
         }
     }

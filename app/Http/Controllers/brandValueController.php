@@ -28,7 +28,8 @@ class brandValueController extends Controller
         // dd($request->all());
         DB::table('brand_value')->insert([
             "produk_client_id" => $request->produk,
-            "nama_value" => $request->nama
+            "nama_value" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -42,6 +43,7 @@ class brandValueController extends Controller
         DB::table("brand_value")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
             'nama_value' => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

@@ -24,7 +24,7 @@ class InstagramService
         $start = $since ?? strtotime("-1 year");
         $end = $until ?? time();
         $url = 'https://graph.instagram.com/me/media';
-        
+
         $params = [
             'fields' => 'id,caption,permalink,timestamp,media_type,like_count,comments_count,insights.metric(reach,views,impressions,saved,shares)',
             'since' => $start,

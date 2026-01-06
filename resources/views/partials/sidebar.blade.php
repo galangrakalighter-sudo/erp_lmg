@@ -1,221 +1,301 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
-        <div class="sidebar-brand-icon">
-            <img src="{{ asset('img/logo.jpg') }}" alt="Lighter Logo" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid rgba(255,255,255,0.2);">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center py-4" href="{{ route('home') }}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="rounded-circle shadow-lg" 
+                 style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
         </div>
-        <div class="sidebar-brand-text mx-3">Lighter</div>
+        <div class="sidebar-brand-text mx-3 uppercase tracking-wider">Lighter</div>
     </a>
 
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
-            <i class="fas fa-th-large"></i>
+            <i class="fas fa-fw fa-th-large"></i>
             <span>Dashboard</span>
         </a>
     </li>
 
-    {{-- SECTION: MARKETING SERVICES --}}
-   @if(!request()->routeIs('cms*'))
-        <hr class="sidebar-divider">
+    @if(!request()->routeIs('cms*'))
+        <div class="sidebar-heading mt-3">Main Services</div>
 
-        {{-- 1. LGTR DIGITAL MARKETING --}}
+        {{-- ==========================================
+             1. DIGITAL MARKETING (ID 1)
+        ========================================== --}}
         <li class="nav-item {{ (request()->is('*manajemen*') || request()->is('*analisis*')) && !request()->is('*BD*') ? 'active' : '' }}">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLGTR" aria-expanded="false">
+            <a class="nav-link {{ (request()->is('*manajemen*') || request()->is('*analisis*')) ? '' : 'collapsed' }}" 
+               href="#" data-toggle="collapse" data-target="#collapseLGTR">
                 <i class="fas fa-fw fa-bullhorn"></i>
-                <span>LGTR Digital Marketing</span>
+                <span>Digital Marketing</span>
             </a>
 
-            <div id="collapseLGTR" class="collapse" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded mx-2 shadow-sm">
-                    
-                    <a class="collapse-item font-weight-bold d-flex align-items-center bg-light mb-1 collapsed" 
-                       href="#" data-toggle="collapse" data-target="#collapseMrCrepeLGTR" 
-                       style="color: #e74a3b !important; justify-content: space-between;" aria-expanded="false">
-                        <span><i class="fas fa-store mr-2"></i> MR. CREPE</span>
-                        <i class="fas fa-chevron-down fa-xs"></i>
-                    </a>
+            <div id="collapseLGTR" class="collapse {{ (request()->is('*manajemen*') || request()->is('*analisis*')) ? 'show' : '' }}" data-parent="#accordionSidebar">
+                <div class="collapse-container">
+                    <div class="brand-sub-header text-danger mb-3">
+                        <i class="fas fa-store mr-2"></i> MR. CREPE
+                    </div>
 
-                    <div id="collapseMrCrepeLGTR" class="collapse">
-                        <div class="py-1 ml-2 border-left-danger">
-                            @if (Auth::user()->role == "admin")
-                                <div class="px-3 mb-2">
-                                    <a class="btn btn-sm btn-outline-danger btn-block text-xs font-weight-bold py-1" href="{{ route('cms.produk', 'LGTR') }}">
-                                        <i class="fas fa-tools fa-xs mr-1"></i> CMS
-                                    </a>
-                                </div>
-                            @endif
+                    @if (Auth::user()->role == "admin")
+                        <div class="px-2 mb-3">
+                            <a class="btn-cms-link" href="{{ route('cms.produk', 'LGTR') }}">
+                                <i class="fas fa-cog mr-1"></i> Dashboard CMS
+                            </a>
+                        </div>
+                    @endif
 
-                            @foreach ($menus as $group)
-                                @if($group->id == 1)
-                                <div class="px-2">
-                                    <a class="collapse-item collapsed font-weight-bold text-gray-600 py-1" data-toggle="collapse" data-target="#groupLGTR{{ $group->id }}" aria-expanded="false">
-                                        <i class="fas fa-folder fa-sm mr-2 text-gray-400"></i> {{ $group->category }}
-                                    </a>
-                                    <div id="groupLGTR{{ $group->id }}" class="collapse">
-                                        <div class="py-1 ml-3 border-left-primary">
-                                            @foreach ($group->clients as $client)
-                                                <a class="collapse-item d-flex align-items-center font-weight-bold text-primary py-1 collapsed" data-toggle="collapse" data-target="#sub_client_lgtr_{{ $client->id }}" aria-expanded="false">
-                                                    <i class="fas fa-user-circle mr-2"></i> {{ $client->nama }}
-                                                    <i class="fas fa-caret-down ml-auto"></i>
-                                                </a>
-                                                <div id="sub_client_lgtr_{{ $client->id }}" class="collapse ml-2 border-left-secondary">
-                                                    <a class="collapse-item py-1 small" href="{{ route('manajemen', $client->id) }}">Manajemen Konten</a>
-                                                    @if(isset($client->access_token['platform']))
-                                                        @foreach($client->access_token['platform'] as $plt)
-                                                            <a class="collapse-item py-1 small" href="{{ route('analisis', ['id_produk' => $client->id, 'platform' => $plt]) }}">
-                                                                Analisis Konten {{ $plt }}
-                                                            </a>
-                                                        @endforeach
-                                                    @endif
-                                                    {{-- <a class="collapse-item py-1 small" href="{{ route('analisis', $client->id) }}">Analisis Konten</a> --}}
-                                                    <a class="collapse-item py-1 small" href="{{ route('market_research', $client->id) }}">Market Research</a>
-                                                    <a class="collapse-item py-1 small" href="{{ route('branding', $client->id) }}">Branding</a>
-                                                </div>
-                                            @endforeach
+                    @foreach ($menus as $group)
+                        @if($group->id == 1)
+                        <div class="group-wrapper mb-2">
+                            <a class="category-dropdown-link collapsed" data-toggle="collapse" data-target="#cat_lgtr_{{ $group->id }}">
+                                <span><i class="fas fa-folder-open mr-2 text-warning"></i>{{ $group->category }}</span>
+                                <i class="fas fa-chevron-down arrow-icon-xs"></i>
+                            </a>
+
+                            <div id="cat_lgtr_{{ $group->id }}" class="collapse ml-2 border-left-custom">
+                                @foreach ($group->clients as $client)
+                                    <div class="client-item-wrapper" style="width: 7vw">
+                                        <a class="client-dropdown-link collapsed" data-toggle="collapse" data-target="#client_lgtr_{{ $client->id }}">
+                                            <span><i class="far fa-user-circle mr-2"></i>{{ $client->nama }}</span>
+                                            <i class="fas fa-caret-right arrow-icon-xs"></i>
+                                        </a>
+
+                                        <div id="client_lgtr_{{ $client->id }}" class="collapse ml-3">
+                                            <div class="platform-sub-links">
+                                                @if(isset($client->access_token['platform']))
+                                                    @foreach ($client->access_token['platform'] as $plt)
+                                                        <div class="platform-group">
+                                                            <div class="platform-label"><i class="fab fa-{{ strtolower($plt) }}"></i> {{ $plt }}</div>
+                                                            <a href="{{ route('manajemen', ['id_produk' => $client->id, 'platform' => $plt]) }}">Manajemen Konten {{ $plt }}</a>
+                                                            <a href="{{ route('analisis', ['id_produk' => $client->id, 'platform' => $plt]) }}">Analisis {{ $plt }}</a>
+                                                            <a href="{{ route('market_research', ['id_produk' => $client->id, 'platform' => $plt]) }}">Market {{ $plt }}</a>
+                                                            <a href="{{ route('branding', ['id_produk' => $client->id, 'platform' => $plt]) }}">Branding {{ $plt }}</a>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted small p-2 d-block">Platform belum diset</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @endif
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
         </li>
 
-        {{-- 2. BUSINESS DEVELOPMENT --}}
+        {{-- ==========================================
+             2. BUSINESS DEVELOPMENT (ID NOT 1)
+        ========================================== --}}
         <li class="nav-item {{ request()->is('*BD*') ? 'active' : '' }}">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBD" aria-expanded="false">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBD">
                 <i class="fas fa-fw fa-briefcase"></i>
-                <span>Business Development</span>
+                <span>Business Dev</span>
             </a>
-
             <div id="collapseBD" class="collapse" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded mx-2 shadow-sm">
-                    
-                    <a class="collapse-item font-weight-bold d-flex align-items-center bg-light mb-1 collapsed" 
-                       href="#" data-toggle="collapse" data-target="#collapseMrCrepeBD" 
-                       style="color: #4e73df !important; justify-content: space-between;" aria-expanded="false">
-                        <span><i class="fas fa-store mr-2"></i> MR. CREPE</span>
-                        <i class="fas fa-chevron-down fa-xs"></i>
-                    </a>
+                <div class="collapse-container">
+                    <div class="brand-sub-header text-primary mb-3">
+                        <i class="fas fa-store mr-2"></i> MR. CREPE
+                    </div>
 
-                    <div id="collapseMrCrepeBD" class="collapse">
-                        <div class="py-1 ml-2 border-left-primary">
-                            @if (Auth::user()->role == "admin")
-                                <div class="px-3 mb-2">
-                                    <a class="btn btn-sm btn-outline-primary btn-block text-xs font-weight-bold py-1" href="{{ route('cms.produk', 'BD') }}">
-                                        <i class="fas fa-tools fa-xs mr-1"></i> CMS
-                                    </a>
-                                </div>
-                            @endif
+                    @if (Auth::user()->role == "admin")
+                        <div class="px-2 mb-3">
+                            <a class="btn-cms-link" href="{{ route('cms.produk', 'BD') }}">
+                                <i class="fas fa-cog mr-1"></i> Dashboard CMS
+                            </a>
+                        </div>
+                    @endif
 
-                            @foreach ($menus as $group)
-                                @if($group->id != 1)
-                                <div class="px-2">
-                                    <a class="collapse-item collapsed font-weight-bold text-gray-600 py-1" data-toggle="collapse" data-target="#groupBD{{ $group->id }}" aria-expanded="false">
-                                        <i class="fas fa-folder fa-sm mr-2 text-gray-400"></i> {{ $group->category }}
-                                    </a>
-                                    <div id="groupBD{{ $group->id }}" class="collapse">
-                                        <div class="py-1 ml-3 border-left-primary">
-                                            @foreach ($group->clients as $client)
-                                                <a class="collapse-item d-flex align-items-center font-weight-bold text-primary py-1 collapsed" data-toggle="collapse" data-target="#sub_client_bd_{{ $client->id }}" aria-expanded="false">
-                                                    <i class="fas fa-user-circle mr-2"></i> {{ $client->nama }}
-                                                    <i class="fas fa-caret-down ml-auto"></i>
-                                                </a>
-                                                <div id="sub_client_bd_{{ $client->id }}" class="collapse ml-2 border-left-secondary">
-                                                    <a class="collapse-item py-1 small" href="{{ route('manajemen', $client->id) }}">Manajemen Konten</a>
-                                                    @if(isset($client->access_token['platform']))
-                                                        @foreach($client->access_token['platform'] as $plt)
-                                                            <a class="collapse-item py-1 small" href="{{ route('analisis', ['id_produk' => $client->id, 'platform' => $plt]) }}">
-                                                                Analisis Konten {{ $plt }}
-                                                            </a>
-                                                        @endforeach
-                                                    @endif
-                                                    <a class="collapse-item py-1 small" href="{{ route('market_research', $client->id) }}">Market Research</a>
-                                                    <a class="collapse-item py-1 small" href="{{ route('branding', $client->id) }}">Branding</a>
-                                                </div>
-                                            @endforeach
+                    @foreach ($menus as $group)
+                        @if($group->id != 1)
+                        <div class="group-wrapper mb-2">
+                            <a class="category-dropdown-link collapsed" data-toggle="collapse" data-target="#cat_bd_{{ $group->id }}">
+                                <span><i class="fas fa-folder-open mr-2 text-info"></i>{{ $group->category }}</span>
+                                <i class="fas fa-chevron-down arrow-icon-xs"></i>
+                            </a>
+
+                            <div id="cat_bd_{{ $group->id }}" class="collapse ml-2 border-left-custom">
+                                @foreach ($group->clients as $client)
+                                    <div class="client-item-wrapper" style="width:7vw">
+                                        <a class="client-dropdown-link collapsed" data-toggle="collapse" data-target="#client_bd_{{ $client->id }}">
+                                            <span>{{ $client->nama }}</span>
+                                            <i class="fas fa-caret-right arrow-icon-xs"></i>
+                                        </a>
+                                        <div id="client_bd_{{ $client->id }}" class="collapse ml-3">
+                                            <div class="platform-sub-links">
+                                                @if(isset($client->access_token['platform']))
+                                                    @foreach ($client->access_token['platform'] as $plt)
+                                                        <div class="platform-group">
+                                                            <div class="platform-label"><i class="fab fa-{{ strtolower($plt) }}"></i> {{ $plt }}</div>
+                                                            <a href="{{ route('manajemen', ['id_produk' => $client->id, 'platform' => $plt]) }}">Manajemen {{ $plt }}</a>
+                                                            <a href="{{ route('analisis', ['id_produk' => $client->id, 'platform' => $plt]) }}">Analisis Konten {{ $plt }}</a>
+                                                            <a href="{{ route('market_research', ['id_produk' => $client->id, 'platform' => $plt]) }}">Market Research {{ $plt }}</a>
+                                                            <a href="{{ route('branding', ['id_produk' => $client->id, 'platform' => $plt]) }}">Branding {{ $plt }}</a>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted small p-2 d-block">Platform belum diset</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @endif
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
         </li>
     @endif
 
-    {{-- SECTION: CMS MR CREPE (DIPERBESAR) --}}
     @if(request()->routeIs('cms*'))
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading text-white font-weight-bold mb-3" style="font-size: 0.95rem; letter-spacing: 0.1rem; opacity: 1; text-transform: uppercase;">
-            <i class="fas fa-tools mr-1 text-warning"></i> CMS MR CREPE
+        <div class="sidebar-heading mt-3 text-warning">CMS MANAGEMENT</div>
+        <div class="cms-nav-group mx-2 mb-3">
+            @php
+                $cmsMenus = [
+                    ['route' => 'cms.produk', 'icon' => 'fa-box', 'label' => 'Produk'],
+                    ['route' => 'cms.hook', 'icon' => 'fa-anchor', 'label' => 'Hook'],
+                    ['route' => 'cms.strategy', 'icon' => 'fa-chess', 'label' => 'Strategy'],
+                    ['route' => 'cms.status', 'icon' => 'fa-info-circle', 'label' => 'Status'],
+                    ['route' => 'cms.type', 'icon' => 'fa-tags', 'label' => 'Type'],
+                    ['route' => 'cms.pilar', 'icon' => 'fa-columns', 'label' => 'Pilar'],
+                    ['route' => 'cms.body', 'icon' => 'fa-paragraph', 'label' => 'Body'],
+                    ['route' => 'cms.cta', 'icon' => 'fa-mouse-pointer', 'label' => 'CTA'],
+                ];
+            @endphp
+            @foreach($cmsMenus as $item)
+            <li class="nav-item {{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                <a class="nav-link py-2 px-3" href="{{ route($item['route'], $activeProductCode) }}">
+                    <i class="fas fa-fw {{ $item['icon'] }}"></i>
+                    <span>{{ $item['label'] }}</span>
+                </a>
+            </li>
+            @endforeach
         </div>
-
-        <li class="nav-item {{ request()->routeIs('cms.produk', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.produk', $activeProductCode) }}"><i class="fas fa-fw fa-box"></i><span>Produk</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.hook', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.hook', $activeProductCode) }}"><i class="fas fa-fw fa-anchor"></i><span>Hook</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.strategy', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.strategy', $activeProductCode) }}"><i class="fas fa-fw fa-chess"></i><span>Strategy</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.status', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.status', $activeProductCode) }}"><i class="fas fa-fw fa-info-circle"></i><span>Status</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.type', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.type', $activeProductCode) }}"><i class="fas fa-fw fa-tags"></i><span>Product Type</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.pilar', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.pilar', $activeProductCode) }}"><i class="fas fa-fw fa-columns"></i><span>Pilar</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.body', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.body', $activeProductCode) }}"><i class="fas fa-fw fa-paragraph"></i><span>Body</span></a>
-        </li>
-        <li class="nav-item {{ request()->routeIs('cms.cta', $activeProductCode) ? 'active' : '' }}">
-            <a class="nav-link py-2" href="{{ route('cms.cta', $activeProductCode) }}"><i class="fas fa-fw fa-mouse-pointer"></i><span>CTA</span></a>
-        </li>
-    @endif
-
-    {{-- BUTTON KEMBALI --}}
-    @if(request()->routeIs('cms*'))
         <hr class="sidebar-divider">
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('home') }}">
-                <i class="fas fa-fw fa-arrow-left text-warning"></i>
-                <span class="text-warning font-weight-bold">Kembali</span>
+            <a class="nav-link text-warning font-weight-bold" href="{{ route('home') }}">
+                <i class="fas fa-fw fa-arrow-left"></i><span>Kembali</span>
             </a>
         </li>
     @endif
 
-    <hr class="sidebar-divider d-none d-md-block">
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    <div class="text-center d-none d-md-inline mt-4">
+        <button class="rounded-circle border-0 shadow" id="sidebarToggle"></button>
     </div>
 </ul>
 
-{{-- CSS FIX UNTUK SCROLLBAR & JARAK MEPEET --}}
+{{-- MODERNIZE CSS --}}
 <style>
+    /* 1. Reset Scrollbar */
     #accordionSidebar {
         overflow-y: auto !important;
-        overflow-x: hidden !important;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
-    #accordionSidebar::-webkit-scrollbar {
-        display: none !important; /* Chrome/Safari */
+    #accordionSidebar::-webkit-scrollbar { display: none; }
+
+    /* 2. Container Styling */
+    .collapse-container {
+        background: rgba(255, 255, 255, 0.05);
+        margin: 0 0.8rem 1rem 0.8rem;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .collapse-inner .collapse-item {
-        margin-right: 12px !important; /* Jarak agar tidak mepet kanan */
-        margin-left: 8px !important;
-        border-radius: 5px;
-        white-space: normal !important; /* Agar teks panjang tidak terpotong */
+
+    /* 3. Category Level Styling (Internal Jasa/Barang) */
+    .category-dropdown-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 7px 10px;
+        color: #fff !important;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none !important;
+        background: rgba(255,255,255,0.08);
+        border-radius: 6px;
+        cursor: pointer;
     }
-    .border-left-primary { border-left: 3px solid #4e73df !important; }
+
+    /* 4. Client Level Styling */
+    .client-dropdown-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px;
+        color: rgba(255,255,255,0.85) !important;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none !important;
+        cursor: pointer;
+    }
+    .client-dropdown-link:hover { color: #fff !important; }
+
+    /* 5. Platform Links (Level Terakhir) */
+    .platform-sub-links {
+        padding: 5px 0;
+    }
+    .platform-group {
+        margin-bottom: 8px;
+        background: rgba(0,0,0,0.1);
+        padding: 5px;
+        border-radius: 6px;
+    }
+    .platform-label {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #f6c23e;
+        padding-left: 8px;
+        margin-bottom: 2px;
+        text-transform: uppercase;
+    }
+    .platform-sub-links a {
+        display: block;
+        padding: 4px 10px 4px 20px;
+        color: rgba(255,255,255,0.7) !important;
+        font-size: 0.75rem;
+        text-decoration: none !important;
+    }
+    .platform-sub-links a:hover { color: #fff !important; background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    /* 6. Decoration & Arrows */
+    .border-left-custom {
+        border-left: 1px solid rgba(255,255,255,0.2);
+        margin-top: 5px;
+    }
+    .arrow-icon-xs { font-size: 0.5rem; transition: transform 0.3s; }
+    .category-dropdown-link:not(.collapsed) .arrow-icon-xs { transform: rotate(180deg); }
+    .client-dropdown-link:not(.collapsed) .arrow-icon-xs { transform: rotate(90deg); }
+
+    .brand-sub-header {
+        font-size: 0.7rem;
+        font-weight: 900;
+        background: white;
+        padding: 4px;
+        border-radius: 4px;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    .btn-cms-link {
+        display: block;
+        background: #f8f9fc;
+        color: #4e73df !important;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-align: center;
+        padding: 6px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        text-decoration: none !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 </style>

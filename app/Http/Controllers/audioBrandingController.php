@@ -11,7 +11,8 @@ class audioBrandingController extends Controller
         // dd($request->all());
         DB::table('audio_brand')->insert([
             "produk_client_id" => $request->produk,
-            "nama_audio" => $request->nama
+            "nama_audio" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -24,7 +25,8 @@ class audioBrandingController extends Controller
     {
         DB::table("audio_brand")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
-            "nama_audio" => $request->nama
+            "nama_audio" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

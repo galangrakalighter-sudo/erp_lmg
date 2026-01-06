@@ -28,7 +28,8 @@ class brandImageController extends Controller
         // dd($request->all());
         DB::table('brand_image')->insert([
             "produk_client_id" => $request->produk,
-            "nama_image" => $request->nama
+            "nama_image" => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -42,6 +43,7 @@ class brandImageController extends Controller
         DB::table("brand_image")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
             'nama_image' => $request->nama,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

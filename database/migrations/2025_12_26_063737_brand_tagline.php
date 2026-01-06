@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('produk_client_id')->constrained("produk_client")->cascadeOnDelete();
             $table->string('nama_tagline');
             $table->string('nama_hashtagline');
+            $table->string('platform');
             $table->timestamps();
         });
     }

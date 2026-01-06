@@ -7,16 +7,19 @@ use App\Services\InstagramService as ServicesInstagramService;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\ProdukClient;
+use App\Services\YoutubeService as Youtube;
 use App\Services\FacebookService as Facebook;
 
 class AnalisisController extends Controller
 {
     protected $instagram;
     protected $facebook;
-    public function __construct(ServicesInstagramService $instagram, Facebook $facebook)
+    protected $youtube;
+    public function __construct(ServicesInstagramService $instagram, Facebook $facebook, Youtube $youtube)
     {
         $this->instagram = $instagram;
         $this->facebook = $facebook;
+        $this->youtube = $youtube;
     }
     public function index($produk, $platform, Request $request)
     {
@@ -55,7 +58,6 @@ class AnalisisController extends Controller
                     $insightsRaw = $this->instagram->getInsights($post['id'], $since, $until, $fetch, $produkBaru->access_token['access'][$index]);
                     $frekuensi = ($post['reach_count'] > 0) ? round($post['impresi'] / $post['reach_count']) : 0;
                     // Data Untuk Chart
-                    
                     $posts[] = [
                         'judul'    => $post['judul'] ?? null,
                         'link'    => $post['link_content'],
@@ -87,18 +89,35 @@ class AnalisisController extends Controller
                     $reach[] = $post['reach'];
                     $views[] = $post['impressions'];
                 }
-                $maxReach = max(array_column($posts, 'reach'));
-                $maxViews = max(array_column($posts, 'impressions'));
-                $maxLikes = max(array_column($posts, 'likes'));
-                $maxComment = max(array_column($posts, 'comments'));
-                $maxShares = max(array_column($posts, 'shares'));
-                $maxEngangement = max(array_column($posts, 'engagement'));
-                
-                $totalReach = array_sum(array_column($posts, 'reach'));
-                $totalImpressions = array_sum(array_column($posts, 'impressions'));
-                $totalComments = array_sum(array_column($posts, 'comments'));
-                $totalLikes = array_sum(array_column($posts, 'likes'));
-                $totalEngagement = $totalLikes + $totalComments + array_sum(array_column($posts, 'shares'));
+                if(!empty($posts)){
+                    $maxReach = max(array_column($posts, 'reach'));
+                    $maxViews = max(array_column($posts, 'impressions'));
+                    $maxLikes = max(array_column($posts, 'likes'));
+                    $maxComment = max(array_column($posts, 'comments'));
+                    $maxShares = max(array_column($posts, 'shares'));
+                    $maxEngangement = max(array_column($posts, 'engagement'));
+                    
+                    $totalReach = array_sum(array_column($posts, 'reach'));
+                    $totalImpressions = array_sum(array_column($posts, 'impressions'));
+                    $totalComments = array_sum(array_column($posts, 'comments'));
+                    $totalLikes = array_sum(array_column($posts, 'likes'));
+                    $totalEngagement = $totalLikes + $totalComments + array_sum(array_column($posts, 'shares'));
+                }else{
+                    $maxReach = 0;
+                    $maxViews = 0;
+                    $maxLikes = 0;
+                    $maxComment = 0;
+                    $maxShares = 0;
+                    $maxEngangement = 0;
+                    
+                    $totalReach = 0;
+                    $totalImpressions = 0;
+                    $totalComments = 0;
+                    $totalLikes = 0;
+                    $totalEngagement = 0;
+                    $insightsRaw[0][0]['followers_gained'] = 0;
+                    $insightsRaw[1]['Followers_sebulan'] = 0;
+                }
                 return view('analisis.instagram', compact(
                     'posts', 
                     'data', 
@@ -152,6 +171,9 @@ class AnalisisController extends Controller
                     'maxShares', 
                     'maxEngangement',
                 ));
+                break;
+            case 'Youtube':
+                $this->youtube->getAnalyticsReport(null, null,$produkBaru->access_token['access'][$index]);
                 break;
             default:
                 # code...

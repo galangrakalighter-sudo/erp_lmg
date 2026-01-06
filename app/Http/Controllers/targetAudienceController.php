@@ -46,6 +46,7 @@ class targetAudienceController extends Controller
             'status_sosial' => $request->status_sosial,
             'penggunaan' => $request->penggunaan,
             'manfaat' => $request->manfaat,
+            "platform" => $request->platform
         ]);
         return redirect()->back()->with('success', 'Berhasil Di Simpan');
     }
@@ -76,6 +77,7 @@ class targetAudienceController extends Controller
             'status_sosial' => $request->status_sosial,
             'penggunaan' => $request->penggunaan,
             'manfaat' => $request->manfaat,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');

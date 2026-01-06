@@ -47,6 +47,7 @@ class segmentasiController extends Controller
             'loyalitas' => $request->loyalitas,
             'negara' => $request->negara,
             'manfaat' => $request->manfaat,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');
@@ -79,6 +80,7 @@ class segmentasiController extends Controller
             'loyalitas' => $request->loyalitas,
             'negara' => $request->negara,
             'manfaat' => $request->manfaat,
+            "platform" => $request->platform
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Di Simpan');

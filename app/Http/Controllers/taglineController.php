@@ -26,7 +26,8 @@ class taglineController extends Controller
         DB::table('brand_tagline')->insert([
             "produk_client_id" => $request->produk,
             "nama_tagline" => $request->nama_tagline,
-            "nama_hashtagline" => "#".$request->nama_hastagline
+            "nama_hashtagline" => "#".$request->nama_hastagline,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menyimpan Data');
@@ -40,7 +41,8 @@ class taglineController extends Controller
         DB::table("brand_tagline")->where("id", $id)->update([
             'produk_client_id' => $request->produk,
             "nama_tagline" => $request->nama_tagline,
-            "nama_hashtagline" => "#".$request->nama_hastagline
+            "nama_hashtagline" => "#".$request->nama_hastagline,
+            'platform'     => $request->platform,
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Mengubah Data');

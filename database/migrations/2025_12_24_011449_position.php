@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('produk_client_id')->constrained("produk_client")->cascadeOnDelete();
             $table->string('indikator')->nullable();
             $table->text('deskripsi')->nullable();
+            $table->text('platform')->nullable();
             $table->timestamps();
         });
     }
