@@ -1,35 +1,26 @@
+# Gunakan image PHP resmi dengan FPM
 FROM php:8.2-fpm
 
+# Install dependencies sistem yang dibutuhkan
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
+    libpq-dev \
+    libpng-dev \
     zip \
     unzip \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libpq-dev
+    git \
+    curl
 
-RUN docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    mbstring \
-    zip \
-    exif \
-    pcntl \
-    bcmath \
-    gd
+# Install ekstensi PHP untuk PostgreSQL dan GD (untuk gambar)
+RUN docker-php-ext-install pdo pdo_pgsql pgsql gd
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Ambil Composer terbaru dari image resmi
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Tentukan folder kerja di dalam container
 WORKDIR /var/www
 
+# Salin source code project (opsional jika menggunakan volume di docker-compose)
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
-
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 storage bootstrap/cache
-
-CMD ["php-fpm"]
+# Berikan izin akses folder storage dan cache agar tidak error di Linux
+RUN chown -R www-data:www-data storage bootstrap/cache
