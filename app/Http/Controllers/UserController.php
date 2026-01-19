@@ -66,7 +66,7 @@ class UserController extends Controller
                 break;
         }
 
-        $divisi = Auth::user()->role == "super_admin" ? json_encode($request->divisi, JSON_NUMERIC_CHECK) : [(int)Auth::user()->divisi[0]];
+        $divisi = Auth::user()->role == "super_admin" ? array_map('intval', (array)$request->divisi) : [(int)Auth::user()->divisi[0]];
         
         // 3. Simpan ke Database
         $newUser = User::create([
@@ -129,7 +129,7 @@ class UserController extends Controller
                 break;
         }
         
-        $divisi = Auth::user()->role == "super_admin" ? json_encode($request->divisi, JSON_NUMERIC_CHECK) : [(int)Auth::user()->divisi[0]];
+        $divisi = Auth::user()->role == "super_admin" ? array_map('intval', (array)$request->divisi) : [(int)Auth::user()->divisi[0]];
         
         // 3. Simpan ke Database
         User::where('id', $id)->update([

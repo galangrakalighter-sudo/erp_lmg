@@ -471,18 +471,6 @@ function toggleHierarchy(role) {
     const panel = $('#hierarchy_panel');
     const secAtasan = $('#section_atasan');
     const secBawahan = $('#section_bawahan');
-    
-    const inputMultiple = $(`#nothod`);
-    const inputSingle = $(`#hod`);
-    
-    if (role === 'head_of_division') {
-        inputMultiple.hide().prop('disabled', true).attr('name', '');
-        inputSingle.show().prop('disabled', false).attr('name', 'divisi[]');
-    } else {
-        inputSingle.hide().prop('disabled', true).attr('name', '');
-        inputMultiple.show().prop('disabled', false).attr('name', 'divisi[]');
-        inputMultiple.select2({ width: '100%' });
-    }
 
     panel.addClass('d-none');
     secAtasan.addClass('d-none');
