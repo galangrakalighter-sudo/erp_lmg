@@ -24,9 +24,9 @@ services:
     image: postgres:18
     container_name: laravel_pgsql
     environment:
-      POSTGRES_DB: laravel
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: erp_lmg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lmg140818
     ports:
       - "5432:5432"
     networks:

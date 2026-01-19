@@ -198,49 +198,45 @@
             <div class="card card-body h-100">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0" id="target_audience">
-                        <thead class="bg-light">
-                            <tr class="text-white bg-info" style="font-size: 0.85rem;">
-                                <th class="border">No</th>
-                                <th class="border">Indikator</th>
-                                <th class="border text-center" colspan="2" class="text-center">Profile</th>
-                                <th class="border">Gaya Hidup</th>
-                                <th class="border">Status Sosial</th>
-                                <th class="border">Penggunaan Produk</th>
-                                <th class="border">Manfaat</th>
+                        <thead class="bg-light text-nowrap">
+                            <tr>
+                                <th class="bg-info border" colspan="2"></th>
+                                <th class="text-center bg-info border" colspan="5">Profile</th>
+                                <th class="bg-info border" colspan="5"></th>
+                            </tr>
+                            <tr>
+                                <th class="bg-dark text-white">No</th>
+                                <th class="bg-dark border text-white">Indikator</th>
+                                <th class="bg-dark border text-white">Usia</th>
+                                <th class="bg-dark border text-white">Gender</th>
+                                <th class="bg-dark border text-white">Negara</th>
+                                <th class="bg-dark border text-white">Wilayah</th>
+                                <th class="bg-dark border text-white">Profile</th>
+                                <th class="bg-dark border text-white">Gaya Hidup</th>
+                                <th class="bg-dark border text-white">Status Sosial</th>
+                                <th class="bg-dark border text-white">Penggunaan Produk</th>
+                                <th class="bg-dark border text-white">Manfaat</th>
                                 @if(Auth::user()->role != "content_creator")
-                                <th class="border">Aksi</th>
+                                <th class="bg-dark text-white">Aksi</th>
                                 @endif
                             </tr>
                         </thead>
-                        <tbody style="font-size: 0.875rem;">
+                        <tbody class="text-nowrap">
                             @foreach ($data['data'][4] as $target)
-                                @php
-                                    $profiles = [
-                                        ['label' => 'Usia', 'val' => $target->usia ?? 'Semua Usia'],
-                                        ['label' => 'Gender', 'val' => $target->gender ?? 'Semua Gender'],
-                                        ['label' => 'Negara', 'val' => $target->negara ?? 'Indonesia'],
-                                        ['label' => 'Wilayah', 'val' => $target->wilayah ?? 'Jabodetabek'],
-                                        ['label' => 'Profile', 'val' => $target->pekerjaan ?? 'Pekerja Kantoran'],
-                                    ];
-                                @endphp
-
-                                @foreach ($profiles as $p)
                                 <tr>
-                                    {{-- Data utama diulang di setiap baris agar dideteksi plugin --}}
-                                    <td class="text-center">{{ $loop->parent->iteration }}</td>
-                                    <td class="text-center">{{ $target->indikator ?? "-" }}</td>
-                                    
-                                    {{-- Bagian Profile (Dua kolom ini tetap terpisah per baris) --}}
-                                    <td style="background-color: #f2f2f2; font-weight: bold;">{{ $p['label'] }}</td>
-                                    <td>{{ $p['val'] }}</td>
-
-                                    {{-- Kolom Sisi Kanan diulang di setiap baris --}}
-                                    <td class="text-center">{{ $target->gaya_hidup ?? "-" }}</td>
-                                    <td class="text-center">{{ $target->status_sosial ?? "-" }}</td>
-                                    <td class="text-center">{{ $target->penggunaan ?? "-" }}</td>
-                                    <td class="text-center">{{ $target->manfaat ?? "-" }}</td>
+                                    <th>{{ $loop->iteration }}</th>
+                                    <th>{{ $target->indikator }}</th>
+                                    <th>{{ $target->usia }}</th>
+                                    <th>{{ $target->gender }}</th>
+                                    <th>{{ $target->negara }}</th>
+                                    <th>{{ $target->wilayah }}</th>
+                                    <th>{{ $target->pekerjaan }}</th>
+                                    <th>{{ $target->gaya_hidup }}</th>
+                                    <th>{{ $target->status_sosial }}</th>
+                                    <th>{{ $target->penggunaan }}</th>
+                                    <th>{{ $target->manfaat }}</th>
                                     @if(Auth::user()->role != "content_creator")
-                                    <td class="text-center">
+                                    <th>
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 
                                                 data-target="#editModalTarget_{{ $target->id }}" 
@@ -248,17 +244,15 @@
                                                 <i class="fas fa-edit"></i>
                                         </button>
 
-                                        {{-- Tombol Hapus --}}
                                         <button class="btn btn-danger btn-sm" 
                                                 data-toggle="modal" 
                                                 data-target="#deleteModalTarget_{{ $target->id }}" 
                                                 title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </td>
+                                    </th>
                                     @endif
                                 </tr>
-                                @endforeach
                             @endforeach
                         </tbody>
                     </table>

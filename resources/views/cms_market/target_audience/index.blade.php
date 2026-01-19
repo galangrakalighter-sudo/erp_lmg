@@ -57,6 +57,10 @@
                                             <label class="form-label small fw-bold">Profile</label>
                                             <input type="text" name="pekerjaan" class="form-control bg-light border-0">
                                         </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label small fw-bold">Indikator</label>
+                                            <input type="text" name="indikator" class="form-control bg-light border-0">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -167,10 +171,15 @@
                                                 <input type="text" name="wilayah" class="form-control bg-light border-0" 
                                                     value="{{ $item->wilayah }}">
                                             </div>
-                                            <div class="col-12 mb-2">
+                                            <div class="col-6 mb-2">
                                                 <label class="form-label small fw-bold text-muted">Profil / Pekerjaan</label>
                                                 <input type="text" name="pekerjaan" class="form-control bg-light border-0" 
                                                     value="{{ $item->pekerjaan }}">
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <label class="form-label small fw-bold text-muted">Indikator</label>
+                                                <input type="text" name="indikator" class="form-control bg-light border-0" 
+                                                    value="{{ $item->indikator }}">
                                             </div>
                                         </div>
                                     </div>

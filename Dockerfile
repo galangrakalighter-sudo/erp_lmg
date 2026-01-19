@@ -23,4 +23,4 @@ WORKDIR /var/www
 COPY . .
 
 # Berikan izin akses folder storage dan cache agar tidak error di Linux
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache  

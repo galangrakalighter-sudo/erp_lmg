@@ -24,6 +24,7 @@ class targetAudienceController extends Controller
     public function store(Request $request){
         // dd($request->all());
         $request->validate([
+            'indikator' => 'nullable|string',
             'usia' => 'nullable|string',
             'gender' => 'nullable|string',
             'negara' => 'nullable|string',
@@ -37,6 +38,7 @@ class targetAudienceController extends Controller
         
         TargetAudience::create([
             'produk_client_id' => $request->produk,
+            'indikator' => $request->indikator,
             'usia' => $request->usia, 
             'gender' => $request->gender,
             'negara' => $request->negara,
@@ -54,6 +56,7 @@ class targetAudienceController extends Controller
     public function update($id, Request $request){
         // dd($request->all());
         $request->validate([
+            'indikator' => 'nullable|string',
             'usia' => 'nullable|string',
             'gender' => 'nullable|string',
             'negara' => 'nullable|string',
@@ -68,6 +71,7 @@ class targetAudienceController extends Controller
         
         TargetAudience::findOrFail($id)->update([
             'produk_client_id' => $request->produk,
+            'indikator' => $request->indikator,
             'usia' => $request->usia, 
             'gender' => $request->gender,
             'negara' => $request->negara,

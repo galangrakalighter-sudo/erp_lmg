@@ -23,6 +23,7 @@ class marketResearchController extends Controller
         }
         $produk = DB::table('produk_client')->where('id', $id)->first();
         // dd($arr);
+        // dd($data);
         return view('market.index', compact('data', 'title', 'produk', 'platform'));
     }
 }

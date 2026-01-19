@@ -28,7 +28,7 @@ class MarketResearchServiceImplement extends ServiceApi implements MarketResearc
     {
         $data = [];
         $jumlah = [];
-        $getData = ['analize_4p','analize_swot', 'positioning', 'segmentasi', 'target_audience'];
+        $getData = ['analize_4p', 'analize_swot', 'positioning', 'segmentasi', 'target_audience'];
 
         for ($i=0; $i < count($getData); $i++) { 
           $market = DB::table($getData[$i])
