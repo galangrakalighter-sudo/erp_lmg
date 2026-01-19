@@ -8,7 +8,7 @@
             {{-- <a href="{{ route('create_produk_jasa') }}" class="btn btn-sm btn-primary">
                 Tambah
             </a> --}}
-            @if(Auth::user()->role == "admin")
+            @if(Auth::user()->role != "content_creator")
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahModal">
                 Tambah
             </button>
@@ -41,9 +41,7 @@
                             <th>Tanggal Deadline</th>
                             <th>Link</th>
                             <th>Status</th>
-                            @if(Auth::user()->role == "admin")
                             <th>Action</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -68,12 +66,12 @@
                                 <th>{{ $item->tanggal_deadline }}</th>
                                 <th><a href="{{ $item->link }}">{{ $item->link }}</a></th>
                                 <th>{{ $item->nama_status }}</th>
-                                @if(Auth::user()->role == "admin")
                                 <th>
-                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal_{{ $item->id }}">Edit</button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal_{{ $item->id }}">Hapus</button>
+                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal_{{ $item->id }}"><i class="fas fa-edit"></i></button>
+                                    @if(Auth::user()->role != "content_creator")
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal_{{ $item->id }}"><i class="fas fa-trash"></i></button>
+                                    @endif
                                 </th>
-                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -350,7 +348,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-white border-right-0"><i class="fas fa-heading text-muted"></i></span>
                                         </div>
-                                        <input type="text" name="judul" class="form-control border-left-0 pl-0" value="{{ $item->judul }}" required>
+                                        <input type="text" name="judul" class="form-control border-left-0 pl-0" value="{{ $item->judul }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }} required>
                                     </div>
                                 </div>
                             </div>
@@ -361,7 +359,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-white border-right-0"><i class="fas fa-link text-muted"></i></span>
                                         </div>
-                                        <input type="text" name="inspirasi" class="form-control border-left-0 pl-0" value="{{ $item->inspirasi }}">
+                                        <input type="text" name="inspirasi" class="form-control border-left-0 pl-0" value="{{ $item->inspirasi }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                     </div>
                                 </div>
                             </div>
@@ -378,7 +376,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="text-dark font-weight-bold small">Tipe Produk</label>
-                                            <select name="type" class="form-control custom-select bg-light border-0" required>
+                                            <select name="type" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['type_produk'] as $type)
                                                     <option value="{{ $type->id }}" {{ $item->type_produk_id == $type->id ? 'selected' : '' }}>{{ $type->type }}</option>
                                                 @endforeach
@@ -388,7 +386,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="text-dark font-weight-bold small">Strategi</label>
-                                            <select name="strategy" class="form-control custom-select bg-light border-0">
+                                            <select name="strategy" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['strategy'] as $strategy)
                                                     <option value="{{ $strategy->id }}" {{ $item->strategy_id == $strategy->id ? 'selected' : '' }}>{{ $strategy->strategy }}</option>
                                                 @endforeach
@@ -398,7 +396,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="text-dark font-weight-bold small">Pilar</label>
-                                            <select name="pilar" class="form-control custom-select bg-light border-0">
+                                            <select name="pilar" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['pilar'] as $pilar)
                                                     <option value="{{ $pilar->id }}" {{ $item->pilar_id == $pilar->id ? 'selected' : '' }}>{{ $pilar->pilar }}</option>
                                                 @endforeach
@@ -408,7 +406,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="text-dark font-weight-bold small">Hook</label>
-                                            <select name="hooks" class="form-control custom-select bg-light border-0">
+                                            <select name="hooks" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['hooks'] as $hooks)
                                                     <option value="{{ $hooks->id }}" {{ $item->hooks_id == $hooks->id ? 'selected' : '' }}>{{ $hooks->hooks }}</option>
                                                 @endforeach
@@ -418,7 +416,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="text-dark font-weight-bold small">Jenis Body</label>
-                                            <select name="jenis_body" class="form-control custom-select bg-light border-0">
+                                            <select name="jenis_body" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['jenis_body'] as $jenis_body)
                                                     <option value="{{ $jenis_body->id }}" {{ $item->body_id == $jenis_body->id ? 'selected' : '' }}>{{ $jenis_body->nama_body }}</option>
                                                 @endforeach
@@ -428,7 +426,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group mb-md-0">
                                             <label class="text-dark font-weight-bold small">Jenis CTA</label>
-                                            <select name="jenis_cta" class="form-control custom-select bg-light border-0">
+                                            <select name="jenis_cta" class="form-control custom-select bg-light border-0" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                                 @foreach ($option['jenis_cta'] as $jenis_cta)
                                                     <option value="{{ $jenis_cta->id }}" {{ $item->cta_id == $jenis_cta->id ? 'selected' : '' }}>{{ $jenis_cta->nama_cta }}</option>
                                                 @endforeach
@@ -438,13 +436,13 @@
                                     <div class="col-md-3 col-6">
                                         <div class="form-group mb-0">
                                             <label class="text-dark font-weight-bold small">Durasi</label>
-                                            <input type="text" name="durasi" class="form-control bg-light border-0" value="{{ $item->durasi }}">
+                                            <input type="text" name="durasi" class="form-control bg-light border-0" value="{{ $item->durasi }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-6">
                                         <div class="form-group mb-0">
                                             <label class="text-dark font-weight-bold small">Komposisi</label>
-                                            <input type="text" name="komposisi" class="form-control bg-light border-0" value="{{ $item->komposisi }}">
+                                            <input type="text" name="komposisi" class="form-control bg-light border-0" value="{{ $item->komposisi }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                         </div>
                                     </div>
                                     @if($kategory->id == 2)
@@ -455,7 +453,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text bg-white border-right-0"><i class="fas fa-palette text-muted"></i></span>
                                                 </div>
-                                                <input type="text" name="warna" class="form-control border-left-0 pl-0" style="height: 38px;" value="{{ $item->background }}">
+                                                <input type="text" name="warna" class="form-control border-left-0 pl-0" style="height: 38px;" value="{{ $item->background }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                             </div>
                                         </div>
                                     </div>
@@ -473,13 +471,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="text-dark font-weight-bold small">Tanggal Posting</label>
-                                    <input type="date" name="tanggal_posting" class="form-control" value="{{ $item->tanggal_posting }}">
+                                    <input type="date" name="tanggal_posting" class="form-control" value="{{ $item->tanggal_posting }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="text-dark font-weight-bold small">Tanggal Deadline</label>
-                                    <input type="date" name="tanggal_deadline" class="form-control" value="{{ $item->tanggal_deadline }}">
+                                    <input type="date" name="tanggal_deadline" class="form-control" value="{{ $item->tanggal_deadline }}" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -496,7 +494,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="text-dark font-weight-bold small">Status <span class="text-danger">*</span></label>
-                                    <select name="status" class="form-control custom-select shadow-sm" style="border: 1px solid #ffc107;" required>
+                                    <select name="status" class="form-control custom-select shadow-sm" style="border: 1px solid #ffc107;" {{ Auth::user()->role == "content_creator" ? "disabled" : "" }}>
                                         @foreach ($option['status'] as $status)
                                             <option value="{{ $status->id }}" {{ $item->status_id == $status->id ? 'selected' : '' }}>{{ $status->nama_status }}</option>
                                         @endforeach
@@ -506,7 +504,7 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-0">
                                     <label class="text-dark font-weight-bold small">Catatan Tambahan</label>
-                                    <textarea name="note" class="form-control" rows="3">{{ $item->note }}</textarea>
+                                    <textarea name="note" class="form-control" rows="3" {{ Auth::user()->role == "content_creator" ? "readonly" : "" }}>{{ $item->note }}</textarea>
                                 </div>
                             </div>
                         </div>

@@ -9,9 +9,11 @@
             {{-- <a href="{{ route('create_produk_jasa') }}" class="btn btn-sm btn-primary">
                 Tambah
             </a> --}}
+            @if(Auth::user()->role != "digital_marketing")
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahModal">
                 Tambah
             </button>
+            @endif
         </div>
 
 
@@ -25,7 +27,9 @@
                             <th>Kategori Jasa</th>
                             <th>Client</th>
                             <th>Status</th>
+                            @if(Auth::user()->role != "digital_marketing")
                             <th>Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -35,10 +39,12 @@
                                 <th>{{ $item->category }}</th>
                                 <th>{{ $item->nama }}</th>
                                 <th>{{ $item->status == 1 ? "Ditampilkan" : "Disembunyikan"}}</th>
+                                @if(Auth::user()->role != "digital_marketing")
                                 <th>
                                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal_{{ $item->id }}">Edit</button>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal_{{ $item->id }}">Hapus</button>
                                 </th>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -94,12 +100,12 @@
                             <label>Platform & Akses Token</label>
                             <div class="platform-row mb-3">
                                 <div class="input-group">
-                                    <select name="platform[]" class="form-control platform-select" required>
+                                    <select name="platform[]" class="form-control platform-select">
                                         <option value="">-- Pilih Platform --</option>
-                                        <option value="Tiktok">Tiktok</option>
+                                        {{-- <option value="Tiktok">Tiktok</option> --}}
                                         <option value="Instagram">Instagram</option>
                                         <option value="Facebook">Facebook</option>
-                                        <option value="Youtube">Youtube</option>
+                                        {{-- <option value="Youtube">Youtube</option> --}}
                                     </select>
                                     <input type="text" name="access[]" class="form-control" placeholder="Input Access Token">
                                     <div class="input-group-append">
@@ -108,6 +114,51 @@
                                 </div>
                             </div>
                         </div>
+                        @if(Auth::user()->role == "digital_marketing_manager" || Auth::user()->role == "head_of_division")
+                        <div id="dm-container" class="form-group">
+                            <label>Digital Marketing</label>
+                            <div class="platform-row mb-3">
+                                <div class="input-group">
+                                    <select name="dm[]" class="form-control dm-select">
+                                        <option value="">-- Pilih DM --</option>
+                                        @if(Auth::user()->role == "digital_marketing_manager")
+                                            @foreach ($dm->where('dmm', Auth::user()->id) as $d)
+                                                <option value="{{ $d->id }}" {{ in_array($item->id, $d->client) ? 'selected' : '' }}>
+                                                    {{ $d->email }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            @foreach ($dm as $d)
+                                                <option value="{{ $d->id }}" {{ in_array($item->id, $d->client) ? 'selected' : '' }}>
+                                                    {{ $d->email }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success add-dm-row">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cc-container" class="form-group">
+                            <label>Content Creator</label>
+                            <div class="platform-row mb-3">
+                                <div class="input-group">
+                                    <select name="cc[]" class="form-control cc-select">
+                                        <option value="">-- Pilih CC --</option>
+                                        @foreach ($cc as $c)
+                                            <option value="{{ $c->id }}">{{ $c->email }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success add-cc-row">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         
                         <small class="form-text text-muted">
                             <a target="_blank" href="{{ route('docs') }}">Klik</a> untuk bantuan mendapatkan token.
@@ -185,10 +236,10 @@
                                 <div class="platform-row mb-3">
                                     <div class="input-group">
                                         <select name="platform[]" class="form-control platform-select" required>
-                                            <option value="Tiktok" {{ $plt == 'Tiktok' ? 'selected' : '' }}>Tiktok</option>
+                                            {{-- <option value="Tiktok" {{ $plt == 'Tiktok' ? 'selected' : '' }}>Tiktok</option> --}}
                                             <option value="Instagram" {{ $plt == 'Instagram' ? 'selected' : '' }}>Instagram</option>
                                             <option value="Facebook" {{ $plt == 'Facebook' ? 'selected' : '' }}>Facebook</option>
-                                            <option value="Youtube" {{ $plt == 'Youtube' ? 'selected' : '' }}>Youtube</option>
+                                            {{-- <option value="Youtube" {{ $plt == 'Youtube' ? 'selected' : '' }}>Youtube</option> --}}
                                         </select>
                                         <input type="text" name="access[]" class="form-control" placeholder="Input Access Token" value="{{ $decoded_token['access'][$index] ?? '' }}">
                                         <div class="input-group-append">
@@ -207,10 +258,10 @@
                                     <div class="input-group">
                                         <select name="platform[]" class="form-control platform-select" required>
                                             <option value="">-- Pilih Platform --</option>
-                                            <option value="Tiktok">Tiktok</option>
+                                            {{-- <option value="Tiktok">Tiktok</option> --}}
                                             <option value="Instagram">Instagram</option>
                                             <option value="Facebook">Facebook</option>
-                                            <option value="Youtube">Youtube</option>
+                                            {{-- <option value="Youtube">Youtube</option> --}}
                                         </select>
                                         <input type="text" name="access[]" class="form-control" placeholder="Input Access Token">
                                         <div class="input-group-append">
@@ -224,6 +275,65 @@
                         <small class="form-text text-muted">
                             <a target="_blank" href="{{ route('docs') }}">Klik</a> untuk bantuan mendapatkan token.
                         </small>
+
+                        <div id="dm-container-edit-{{ $item->id }}" class="form-group">
+                            <label class="font-weight-bold">Digital Marketing</label>
+                            <div class="dm-edit-row mb-2">
+                                <div class="input-group">
+                                    <select name="dm[]" class="form-control">
+                                        <option value="">-- Pilih DM --</option>
+                                        @if(Auth::user()->role == "digital_marketing_manager")
+                                            @foreach ($dm->where('dmm', Auth::user()->id) as $d)
+                                                <option value="{{ $d->id }}" {{ in_array($item->id, $d->client) ? 'selected' : '' }}>
+                                                    {{ $d->email }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            @foreach ($dm as $d)
+                                                <option value="{{ $d->id }}" {{ in_array($item->id, $d->client) ? 'selected' : '' }}>
+                                                    {{ $d->email }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="input-group-append">
+                                        @foreach ($dm as $d)
+                                            @if($loop->first)
+                                                <button type="button" class="btn btn-success add-dm-row-edit" data-target="#dm-container-edit-{{ $item->id }}">+</button>
+                                            @else
+                                                <button type="button" class="btn btn-danger remove-dm-row">-</button>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- SECTION CONTENT CREATOR --}}
+                        <div id="cc-container-edit-{{ $item->id }}" class="form-group">
+                            <label class="font-weight-bold">Content Creator (Bisa > 1)</label>
+                            <div class="cc-edit-row mb-2">
+                                <div class="input-group">
+                                    <select name="cc[]" class="form-control">
+                                        <option value="">-- Pilih CC --</option>
+                                        @foreach ($cc as $c)
+                                            <option value="{{ $c->id }}" {{ in_array($item->id, $c->client) ? 'selected' : '' }}>
+                                                {{ $c->email }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="input-group-append">
+                                        @foreach ($cc as $c)
+                                            @if($loop->first)
+                                            <button type="button" class="btn btn-success add-cc-row-edit" data-target="#cc-container-edit-{{ $item->id }}">+</button>
+                                            @else
+                                            <button type="button" class="btn btn-danger remove-cc-row">-</button>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -283,7 +393,7 @@
 <script>
 
 $(document).ready(function() {
-    const allPlatforms = ["Tiktok", "Instagram", "Facebook", "Youtube"];
+    const allPlatforms = ["Tiktok", "Instagram"];
 
     function updateOptions() {
         // Kita perlu updateOptions secara spesifik per Modal agar tidak bentrok antar modal
@@ -343,10 +453,69 @@ $(document).ready(function() {
         updateOptions();
     });
 
+    $(document).on('click', '.add-dm-row, .add-dm-row-edit', function() {
+        let targetSelector = $(this).data('target') || '#dm-container';
+        let $container = $(targetSelector);
+        
+        let options = `<option value="">-- Pilih DM --</option>`;
+        @foreach ($dm as $d)
+            options += `<option value="{{ $d->id }}">{{ $d->email }}</option>`;
+        @endforeach
+
+        let newRow = `
+            <div class="dm-row mb-3 mt-2">
+                <div class="input-group">
+                    <select name="dm[]" class="form-control" required>${options}</select>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-danger dm-remove-row">-</button>
+                    </div>
+                </div>
+            </div>`;
+        $container.append(newRow);
+    });
+
+    // --- Logic untuk Multiple CC ---
+    $(document).on('click', '.add-cc-row, .add-cc-row-edit', function() {
+        let targetSelector = $(this).data('target') || '#cc-container';
+        let $container = $(targetSelector);
+
+        let options = `<option value="">-- Pilih CC --</option>`;
+        @foreach ($cc as $c)
+            options += `<option value="{{ $c->id }}">{{ $c->email }}</option>`;
+        @endforeach
+
+        let newRow = `
+            <div class="cc-row mb-3 mt-2">
+                <div class="input-group">
+                    <select name="cc[]" class="form-control" required>${options}</select>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-danger cc-remove-row">-</button>
+                    </div>
+                </div>
+            </div>`;
+        $container.append(newRow);
+    });
+
     // Event Klik Tombol Hapus
     $(document).on('click', '.remove-platform', function() {
         $(this).closest('.platform-row').remove();
         updateOptions();
+    });
+
+    $(document).on('click', '.remove-dm-row', function() {
+        $(this).closest('.dm-edit-row').remove();
+    });
+
+    $(document).on('click', '.remove-cc-row', function() {
+        $(this).closest('.cc-edit-row').remove();
+    });
+
+    $(document).on('click', '.dm-remove-row', function() {
+        $(this).closest('.dm-row').remove();
+    });
+
+    $(document).on('click', '.cc-remove-row', function() {
+        $(this).closest('.cc-row').remove();
     });
 
     // Event saat pilihan berubah

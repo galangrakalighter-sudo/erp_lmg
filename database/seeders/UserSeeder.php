@@ -20,20 +20,17 @@ class UserSeeder extends Seeder
                 "name" => "admin",
                 "email" => "admin@gmail.com",
                 "password" => bcrypt("admin123"),
-                "role" => "admin",
+                "role" => "super_admin",
+                "hod" => null,
+                "dmm" => null,
+                "dm" => null,
+                "cc" => null,
+                "divisi" => json_encode([]),
+                "client" => json_encode([]),
                 "remember_token" => Str::random(10),
                 "created_at" => now(),
                 "updated_at" => now() 
             ],
-            [
-                "name" => "cust",
-                "email" => "cust@gmail.com",
-                "password" => bcrypt("admin123"),
-                "role" => "customer",
-                "remember_token" => Str::random(10),
-                "created_at" => now(),
-                "updated_at" => now() 
-            ]
         ]);
     }
 }

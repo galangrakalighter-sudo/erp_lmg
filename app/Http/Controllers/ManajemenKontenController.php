@@ -106,6 +106,12 @@ class ManajemenKontenController extends Controller
     }
 
     public function update($id, Request $request){
+        // if (!$request->warna) {
+        //     $request->merge([
+        //         'warna' => null
+        //     ]);
+        // }
+
         $arr = ['type', 'strategy', 'pilar', 'hooks', 'status', 'jenis_body', 'jenis_cta'];
         $value = [];
         foreach($arr as $d){
@@ -144,7 +150,7 @@ class ManajemenKontenController extends Controller
                 'body_id'          => $value['jenis_body'],
                 'cta_id'           => $value['jenis_cta'],
                 'durasi'           => $request->durasi,
-                'background'       => $value['warna'],
+                'background'       => $request->warna,
                 'komposisi'        => $request->komposisi,
                 'note'             => $request->note,
                 'tanggal_posting'  => $request->tanggal_posting,

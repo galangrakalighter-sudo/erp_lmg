@@ -36,9 +36,9 @@
                 <div class="modal-footer">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        {{-- <a class="btn btn-primary" href="login.html">Logout</a> --}}
-                        <button type="submit" class="btn btn-primary">Logout</button>
+                        <button type="submit" class="w-full text-left py-3 px-4 rounded-lg bg-gold text-black font-bold shadow-lg shadow-gold/20 transition duration-200">
+                            Logout
+                        </button>
                     </form>
                 </div>
             </div>

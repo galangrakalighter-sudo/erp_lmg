@@ -36,7 +36,7 @@
                         <i class="fas fa-store mr-2"></i> MR. CREPE
                     </div>
 
-                    @if (Auth::user()->role == "admin")
+                    @if (Auth::user()->role == "super_admin" ||  Auth::user()->role != "content_creator" && in_array(1, auth()->user()->divisi))
                         <div class="px-2 mb-3">
                             <a class="btn-cms-link" href="{{ route('cms.produk', 'LGTR') }}">
                                 <i class="fas fa-cog mr-1"></i> Dashboard CMS
@@ -55,14 +55,22 @@
                             <div id="cat_lgtr_{{ $group->id }}" class="collapse ml-2 border-left-custom">
                                 @foreach ($group->clients as $client)
                                     <div class="client-item-wrapper" style="width: 7vw">
-                                        <a class="client-dropdown-link collapsed" data-toggle="collapse" data-target="#client_lgtr_{{ $client->id }}">
+                                        @if( Auth::user()->role == "super_admin" || in_array(1, Auth::user()->divisi) && in_array($client->id, Auth::user()->client))
+                                            <a class="client-dropdown-link collapsed" data-toggle="collapse" data-target="#client_lgtr_{{ $client->id }}">
+                                                <span><i class="far fa-user-circle mr-2"></i>{{ $client->nama }}</span>
+                                                <i class="fas fa-caret-right arrow-icon-xs"></i>
+                                            </a>
+                                        @else
                                             <span><i class="far fa-user-circle mr-2"></i>{{ $client->nama }}</span>
                                             <i class="fas fa-caret-right arrow-icon-xs"></i>
-                                        </a>
+                                        @endif
 
                                         <div id="client_lgtr_{{ $client->id }}" class="collapse ml-3">
                                             <div class="platform-sub-links">
-                                                @if(isset($client->access_token['platform']))
+                                                @php
+                                                    $platforms = collect(data_get($client->access_token, 'platform'))->filter();
+                                                @endphp
+                                                @if($platforms->isNotEmpty())
                                                     @foreach ($client->access_token['platform'] as $plt)
                                                         <div class="platform-group">
                                                             <div class="platform-label"><i class="fab fa-{{ strtolower($plt) }}"></i> {{ $plt }}</div>
@@ -101,7 +109,7 @@
                         <i class="fas fa-store mr-2"></i> MR. CREPE
                     </div>
 
-                    @if (Auth::user()->role == "admin")
+                    @if (Auth::user()->role == "super_admin" || Auth::user()->role != "content_creator" && in_array(2, auth()->user()->divisi))
                         <div class="px-2 mb-3">
                             <a class="btn-cms-link" href="{{ route('cms.produk', 'BD') }}">
                                 <i class="fas fa-cog mr-1"></i> Dashboard CMS
@@ -120,13 +128,22 @@
                             <div id="cat_bd_{{ $group->id }}" class="collapse ml-2 border-left-custom">
                                 @foreach ($group->clients as $client)
                                     <div class="client-item-wrapper" style="width:7vw">
+                                        
+                                        @if( Auth::user()->role == "super_admin" || in_array(2, Auth::user()->divisi) && in_array($client->id, Auth::user()->client))
                                         <a class="client-dropdown-link collapsed" data-toggle="collapse" data-target="#client_bd_{{ $client->id }}">
                                             <span>{{ $client->nama }}</span>
                                             <i class="fas fa-caret-right arrow-icon-xs"></i>
                                         </a>
+                                        @else
+                                            <span>{{ $client->nama }}</span>
+                                            <i class="fas fa-caret-right arrow-icon-xs"></i>
+                                        @endif
                                         <div id="client_bd_{{ $client->id }}" class="collapse ml-3">
                                             <div class="platform-sub-links">
-                                                @if(isset($client->access_token['platform']))
+                                                @php
+                                                    $platforms = collect(data_get($client->access_token, 'platform'))->filter();
+                                                @endphp
+                                                @if($platforms->isNotEmpty())
                                                     @foreach ($client->access_token['platform'] as $plt)
                                                         <div class="platform-group">
                                                             <div class="platform-label"><i class="fab fa-{{ strtolower($plt) }}"></i> {{ $plt }}</div>
@@ -149,6 +166,15 @@
                     @endforeach
                 </div>
             </div>
+        </li>
+    @endif
+
+    @if(Auth::user()->role == "head_of_division" || Auth::user()->role == "super_admin")
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('manajemen_user.index') }}">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Manajemen User</span>
+            </a>
         </li>
     @endif
 
