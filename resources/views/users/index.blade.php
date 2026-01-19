@@ -173,11 +173,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="font-weight-bold small text-muted">DIVISI (BISA PILIH > 1)</label>
                             {{-- Perhatikan penambahan name="divisi[]" dan atribut multiple --}}
-                            <select name="divisi[]" class="form-control select2-divisi" multiple="multiple" id="notHod" style=" display: {{ Auth::user()->role == 'head_of_division' ? 'none' : 'block' }}" required>
-                                <option value="1">Digital Marketing</option>
-                                <option value="2">Business Dev</option>
-                            </select>
-                            <select name="divisi[]" class="form-control" id="hod" style="display: {{ Auth::user()->role == 'head_of_division' ? 'block' : 'none' }}" required>
+                            <select name="divisi[]" class="form-control select2-divisi" {{ Auth::user()->role == "super_admin" ?  'multiple="multiple"' : ''}} required>
                                 <option value="1">Digital Marketing</option>
                                 <option value="2">Business Dev</option>
                             </select>
@@ -206,6 +202,15 @@
                             <div class="row">
                                 <div class="col-md-6 border-right d-none" id="section_atasan">
                                     <h6 class="font-weight-bold text-info small mb-3">ATASAN LANGSUNG</h6>
+                                    <div id="div_pilih_hod" class="form-group d-none">
+                                        <label class="small">Pilih HOD</label>
+                                        <select name="hod_id" class="form-control bg-white">
+                                            <option value="">-- Tanpa HOD --</option>
+                                            @foreach($data->where('role', 'head_of_division') as $m)
+                                                <option value="{{ $m->id }}">{{ $m->email }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div id="div_pilih_dmm" class="form-group d-none">
                                         <label class="small">Pilih Manager (DMM)</label>
                                         <select name="dmm_id" class="form-control bg-white">
@@ -285,13 +290,7 @@
                                         // Pastikan $item->divisi adalah array (hasil cast dari model)
                                         $userDivisions = is_array($item->divisi) ? $item->divisi : json_decode($item->divisi, true) ?? [];
                                     @endphp
-                                <select name="{{ $item->role == 'head_of_division' ? '' : 'divisi[]' }}" class="form-control select2-divisi-edit divisi-input-multiple" id="nothod_{{ $item->id }}" multiple="multiple" style="display: {{ $item->role == 'head_of_division' ? 'none' : 'block' }}" required>
-                                    <option value="1" {{ in_array(1, $userDivisions) ? 'selected' : '' }}>Digital Marketing</option>
-                                    <option value="2" {{ in_array(2, $userDivisions) ? 'selected' : '' }}>Business Dev</option>
-                                </select>
-
-                                {{-- Select untuk HOD --}}
-                                <select name="{{ $item->role == 'head_of_division' ? 'divisi[]' : '' }}" class="form-control divisi-input-single" id="hod_{{ $item->id }}" style="display: {{ $item->role == 'head_of_division' ? 'block' : 'none' }}" required>
+                                <select name="{{ $item->role == 'head_of_division' ? '' : 'divisi[]' }}" class="form-control select2-divisi-edit " id="nothod_{{ $item->id }}" {{ Auth::user()->role == "super_admin" ?  'multiple="multiple"' : ''}} required>
                                     <option value="1" {{ in_array(1, $userDivisions) ? 'selected' : '' }}>Digital Marketing</option>
                                     <option value="2" {{ in_array(2, $userDivisions) ? 'selected' : '' }}>Business Dev</option>
                                 </select>
@@ -317,7 +316,7 @@
                                         <h6 class="font-weight-bold text-info small mb-3">ATASAN LANGSUNG</h6>
                                         <div id="div_edit_hod_{{ $item->id }}" class="form-group {{ $item->role == 'digital_marketing_manager' && Auth::user()->role == 'super_admin' ? '' : 'd-none' }}">
                                             <label class="small">Pilih Head Division (HOD)</label>
-                                            <select name="hod" class="form-control bg-white">
+                                            <select name="hod_id" class="form-control bg-white">
                                                 <option value="">-- Tanpa Head Division --</option>
                                                 @foreach($data->where('role', 'head_of_division') as $m)
                                                     <option value="{{ $m->id }}" {{ $item->hod == $m->id ? 'selected' : '' }}>{{ $m->email }}</option>
@@ -475,12 +474,14 @@ function toggleHierarchy(role) {
     panel.addClass('d-none');
     secAtasan.addClass('d-none');
     secBawahan.addClass('d-none');
-    $('#div_pilih_dmm, #div_pilih_dm, #div_bawahan_dm, #div_bawahan_cc').addClass('d-none');
+    $('#div_pilih_hod, #div_pilih_dmm, #div_pilih_dm, #div_bawahan_dm, #div_bawahan_cc').addClass('d-none');
 
     if (role === 'digital_marketing_manager') {
+        console.log($('#div_pilih_hod'));
         panel.removeClass('d-none');
+        secAtasan.removeClass('d-none').addClass('col-md-12');
         secBawahan.removeClass('d-none').addClass('col-md-12');
-        $('#div_bawahan_dm').removeClass('d-none');
+        $('#div_bawahan_dm, #div_pilih_hod').removeClass('d-none');
     } else if (role === 'digital_marketing') {
         panel.removeClass('d-none');
         secAtasan.removeClass('d-none').addClass('col-md-6');
@@ -495,7 +496,6 @@ function toggleHierarchy(role) {
 
 // 4. Logic Hirarki Edit
 function toggleHierarchyEdit(role, userId) {
-    console.log("masuk sini");
     const panel = $(`#hierarchy_panel_edit_${userId}`);
     const secAtasan = $(`#section_atasan_edit_${userId}`);
     const secBawahan = $(`#section_bawahan_edit_${userId}`);
@@ -503,24 +503,25 @@ function toggleHierarchyEdit(role, userId) {
     const inputMultiple = $(`#nothod_${userId}`);
     const inputSingle = $(`#hod_${userId}`);
     
-    if (role === 'head_of_division') {
-        inputMultiple.hide().prop('disabled', true).attr('name', '');
-        inputSingle.show().prop('disabled', false).attr('name', 'divisi[]');
-    } else {
-        inputSingle.hide().prop('disabled', true).attr('name', '');
-        inputMultiple.show().prop('disabled', false).attr('name', 'divisi[]');
-        inputMultiple.select2({ width: '100%' });
-    }
+    // if (role === 'head_of_division') {
+    //     inputMultiple.hide().prop('disabled', true).attr('name', '');
+    //     inputSingle.show().prop('disabled', false).attr('name', 'divisi[]');
+    // } else {
+    //     inputSingle.hide().prop('disabled', true).attr('name', '');
+    //     inputMultiple.show().prop('disabled', false).attr('name', 'divisi[]');
+    //     inputMultiple.select2({ width: '100%' });
+    // }
     
     panel.addClass('d-none');
     secAtasan.addClass('d-none').removeClass('col-md-6 col-md-12');
     secBawahan.addClass('d-none').removeClass('col-md-6 col-md-12');
-    $(`#div_edit_dmm_${userId}, #div_edit_dm_${userId}`).addClass('d-none');
+    $(`#div_edit_hod_${userId}, #div_edit_dmm_${userId}, #div_edit_dm_${userId}`).addClass('d-none');
 
     if (role === 'digital_marketing_manager') {
         panel.removeClass('d-none');
-        secBawahan.removeClass('d-none').addClass('col-md-12');
-        $(`#div_edit_dmm_${userId}`).removeClass('d-none');
+        secAtasan.removeClass('d-none').addClass('col-md-6');
+        secBawahan.removeClass('d-none').addClass('col-md-6');
+        $(`#div_edit_hod_${userId}`).removeClass('d-none');
     } else if (role === 'digital_marketing') {
         panel.removeClass('d-none');
         secAtasan.removeClass('d-none').addClass('col-md-6');

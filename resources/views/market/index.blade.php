@@ -5,7 +5,7 @@
         <div class="col-lg-6">
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-image mr-2"></i>4P Analyze</h6>
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->role != "content_creator")
                 <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalAnalyze4P">
                     <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                 </button>
@@ -54,7 +54,7 @@
         <div class="col-lg-6">
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-image mr-2"></i>SWOT Analyse</h6>
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->role != "content_creator")
                 <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalSWOT">
                     <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                 </button>
@@ -70,7 +70,7 @@
                                 <th class="bg-dark text-white">Weakness</th>
                                 <th class="bg-dark text-white">Oportunity</th>
                                 <th class="bg-dark text-white">Threat</th>
-                                @if(Auth::user()->role == "admin")
+                                @if(Auth::user()->role != "content_creator")
                                 <th class="bg-dark text-white">Aksi</th>
                                 @endif
                             </tr>
@@ -83,7 +83,7 @@
                                     <th>{{ $analize_swot->weakness }}</th>
                                     <th>{{ $analize_swot->oportunity }}</th>
                                     <th>{{ $analize_swot->threat }}</th>
-                                    @if(Auth::user()->role == "admin")
+                                    @if(Auth::user()->role != "content_creator")
                                     <th>
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 
@@ -112,7 +112,7 @@
     <div class="col-lg-13 mb-4">
         <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
             <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-image mr-2"></i>Segmentasi Market</h6>
-            @if(Auth::user()->role == "admin")
+            @if(Auth::user()->role != "content_creator")
             <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalSegmentasi">
                 <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
             </button>
@@ -141,7 +141,7 @@
                             <th class="bg-dark text-white">Penggunaan Konten</th>
                             <th class="bg-dark text-white">Loyalitas</th>
                             <th class="bg-dark text-white">Manfaat</th>
-                            @if(Auth::user()->role == "admin")
+                            @if(Auth::user()->role != "content_creator")
                             <th class="bg-dark text-white">Aksi</th>
                             @endif
                         </tr>
@@ -160,7 +160,7 @@
                                 <th>{{ $segmentasi->penggunaan }}</th>
                                 <th>{{ $segmentasi->loyalitas }}</th>
                                 <th>{{ $segmentasi->manfaat }}</th>
-                                @if(Auth::user()->role == "admin")
+                                @if(Auth::user()->role != "content_creator")
                                 <th>
                                     <button class="btn btn-warning btn-sm text-white" 
                                             data-toggle="modal" 
@@ -189,7 +189,7 @@
         <div class="col-lg-6">
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-image mr-2"></i>Target Audience</h6>
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->role != "content_creator")
                 <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalTarget">
                     <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                 </button>
@@ -207,7 +207,7 @@
                                 <th class="border">Status Sosial</th>
                                 <th class="border">Penggunaan Produk</th>
                                 <th class="border">Manfaat</th>
-                                @if(Auth::user()->role == "admin")
+                                @if(Auth::user()->role != "content_creator")
                                 <th class="border">Aksi</th>
                                 @endif
                             </tr>
@@ -239,7 +239,7 @@
                                     <td class="text-center">{{ $target->status_sosial ?? "-" }}</td>
                                     <td class="text-center">{{ $target->penggunaan ?? "-" }}</td>
                                     <td class="text-center">{{ $target->manfaat ?? "-" }}</td>
-                                    @if(Auth::user()->role == "admin")
+                                    @if(Auth::user()->role != "content_creator")
                                     <td class="text-center">
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 
@@ -268,7 +268,7 @@
         <div class="col-lg-6">
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-image mr-2"></i>Posistion</h6>
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->role != "content_creator")
                 <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalPosition">
                     <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                 </button>
@@ -282,7 +282,7 @@
                                 <th class="text-white border">No</th>
                                 <th class="text-white border">Indikator</th>
                                 <th class="text-white border">Deskripsi</th>
-                                @if(Auth::user()->role == "admin")
+                                @if(Auth::user()->role != "content_creator")
                                 <th class="text-white border">Aksi</th>
                                 @endif
                             </tr>
@@ -293,7 +293,7 @@
                                     <th>{{ $loop->iteration }}</th>
                                     <th>{{ $positioning->indikator }}</th>
                                     <th>{{ $positioning->deskripsi }}</th>
-                                    @if(Auth::user()->role == "admin")
+                                    @if(Auth::user()->role != "content_creator")
                                     <th>
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 

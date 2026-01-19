@@ -48,17 +48,17 @@ class UserController extends Controller
                 $dm_id = null;
                 break;
             case 'digital_marketing_manager':
-                $hod_id = Auth::user()->id;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = null;
                 $dm_id = null;
                 break;
             case 'digital_marketing':
-                $hod_id = Auth::user()->id;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = $request->dmm_id ?? null;
                 $dm_id = null;
                 break;
             case 'content_creator':
-                $hod_id = Auth::user()->id;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = User::find($request->dm_id)->dmm ?? null;
                 $dm_id =  (int)$request->dm_id ?? null;
                 break;
@@ -111,17 +111,17 @@ class UserController extends Controller
                 $dm_id = null;
                 break;
             case 'digital_marketing_manager':
-                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = null;
                 $dm_id = null;
                 break;
             case 'digital_marketing':
-                $hod_id = Auth::user()->id;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = (int)$request->dmm ?? null;
                 $dm_id = null;
                 break;
             case 'content_creator':
-                $hod_id = Auth::user()->id;
+                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
                 $dmm_id = User::find($request->dm)->dmm ?? null;
                 $dm_id =  (int)$request->dm ?? null;
                 break;
@@ -148,7 +148,6 @@ class UserController extends Controller
         if ($request->has('bawahan_ids') && is_array($request->bawahan_ids)) {
             foreach ($request->bawahan_ids as $subordinateId) {
                 $subordinate = User::find($subordinateId);
-                // dd($)
                 if ($subordinate) {
                     if ($request->role === 'digital_marketing_manager') {
                         $cc = User::where('cc', $subordinate->cc)->first();
@@ -156,13 +155,17 @@ class UserController extends Controller
                         User::where('id', $subordinate->dmm)->update(['dm' => null]);
                         
                         $subordinate->update(['dmm' => $id]);
+                        
+                        $subordinate->update(['hod' => $hod_id]);
 
                         $ccData->update(['dmm' => $id]);
 
-                        }elseif ($request->role === 'digital_marketing') {
+                        $ccData->update(['hod' => $hod_id]);
+
+                    }elseif ($request->role === 'digital_marketing') {
                         User::where('id', $subordinate->dm)->update(['cc' => null]);
                         $subordinate->update(['dm' => $id]);
-                        $cc = User::where('dm', $subordinate->cc);
+                        $subordinate->update(['hod' => $hod_id]);
                     }
                 }
             }
