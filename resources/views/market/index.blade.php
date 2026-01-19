@@ -201,7 +201,7 @@
                         <thead class="bg-light text-nowrap">
                             <tr>
                                 <th class="bg-info border" colspan="2"></th>
-                                <th class="text-center bg-info border" colspan="5">Profile</th>
+                                <th class="text-center text-white bg-info border" colspan="5">Profile</th>
                                 <th class="bg-info border" colspan="5"></th>
                             </tr>
                             <tr>
