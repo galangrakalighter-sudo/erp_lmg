@@ -225,7 +225,7 @@
 
                     <!-- MODAL FOOTER -->
                     <div class="modal-footer border-0 p-4 bg-light shadow-sm" style="border-radius: 0 0 15px 15px;">
-                        <button type="button" class="btn btn-link text-muted fw-bold text-decoration-none me-auto" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-link text-muted fw-bold text-decoration-none me-auto" data-dismiss="modal">
                             Batal
                         </button>
                         <button type="submit" class="btn btn-primary px-5 py-2 shadow-sm fw-bold" style="border-radius: 8px;">
