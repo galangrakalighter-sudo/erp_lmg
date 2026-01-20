@@ -35,7 +35,11 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label small fw-bold">Rentang Usia</label>
-                                            <input type="text" name="usia" class="form-control bg-light border-0">
+                                            <textarea 
+                                                id="myInput" 
+                                                placeholder="Ketik sesuatu... (Shift+Enter untuk baris baru)" 
+                                                style="width: 100%; min-height: 50px; padding: 10px; resize: vertical;">
+                                            </textarea>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label small fw-bold">Gender</label>

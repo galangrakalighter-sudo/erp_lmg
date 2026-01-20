@@ -13,7 +13,7 @@ class moodBoardController extends Controller
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             'produk' => 'required',
-            'image'  => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image'  => 'required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         // 2. Jika Validasi Gagal, Redirect Back dengan Session Error
@@ -39,7 +39,7 @@ class moodBoardController extends Controller
         $moodboard = Moodboard::findOrFail($id);
         if ($request->hasFile('image')) {
             $validator = Validator::make($request->all(), [
-                'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+                'image' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
             ]);
 
             if ($validator->fails()) {

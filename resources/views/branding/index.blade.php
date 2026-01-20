@@ -6,63 +6,57 @@
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                     <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-fingerprint mr-2"></i>Brand Identify</h6>
-                    @if(Auth::user()->role != "content_creator")
+                    @if(Auth::user()->role != "content_creator" && !$identify)
                     <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalIdentify">
                         <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                     </button>
                     @endif
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" id="dataTable">
-                            <thead class="bg-dark text-white">
-                                <tr style="font-size: 0.85rem;">
-                                    <th>No</th>
-                                    <th>Gambar</th>
-                                    @if(Auth::user()->role != "content_creator")
-                                    <th class="text-center">Aksi</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody style="font-size: 0.875rem;">
-                                @foreach ($identify as $item)
-                                <tr>
-                                    <th>{{ $loop->iteration }}</th>
-                                    <th>
-                                    @if($item->identify)
-                                        <a href="{{ asset('storage/' . $item->identify) }}" target="_blank">
-                                            <img src="{{ asset('storage/' . $item->identify) }}" 
-                                                alt="Moodboard" 
-                                                class="img-thumbnail shadow-sm" 
-                                                style="width: 120px; height: 80px; object-fit: cover;">
-                                        </a>
-                                    @else
-                                        <span class="text-muted small">Tidak ada gambar</span>
-                                    @endif
-                                    </th>
-                                    @if(Auth::user()->role != "content_creator")
-                                    <th>
+                    @if ($identify)
+                        {{-- Tampilan saat data ADA --}}
+                        <div class="position-relative text-center">
+                            @if($identify->identify)
+                                <a href="{{ asset('storage/' . $identify->identify) }}" target="_blank" class="d-block mb-3">
+                                    <img src="{{ asset('storage/' . $identify->identify) }}" 
+                                        alt="Brand Identify" 
+                                        class="img-fluid rounded shadow-sm border" 
+                                        style="width: 100%; max-height: 500px; object-fit: contain; background-color: #f8f9fc;">
+                                </a>
+                            @else
+                                <div class="alert alert-light text-center py-5 border">
+                                    <i class="fas fa-image fa-3x text-gray-300 mb-3"></i>
+                                    <p class="text-muted mb-0">File gambar tidak ditemukan</p>
+                                </div>
+                            @endif
+
+                            {{-- Tombol Aksi melayang di pojok kanan atas --}}
+                            @if(Auth::user()->role != "content_creator")
+                                <div class="position-absolute" style="top: 10px; right: 10px;">
+                                    <div class="btn-group shadow-sm">
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 
-                                                data-target="#editModalIdentify_{{ $item->id }}" 
+                                                data-target="#editModalIdentify_{{ $identify->id }}" 
                                                 title="Edit">
-                                                <i class="fas fa-edit"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
-
-                                        {{-- Tombol Hapus --}}
                                         <button class="btn btn-danger btn-sm" 
                                                 data-toggle="modal" 
-                                                data-target="#hapusModalIdentify_{{ $item->id }}" 
+                                                data-target="#hapusModalIdentify_{{ $identify->id }}" 
                                                 title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </th>
-                                    @endif
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        {{-- Tampilan saat data KOSONG --}}
+                        <div class="text-center py-5">
+                            <i class="fas fa-folder-open fa-3x text-gray-200 mb-3"></i>
+                            <p class="text-muted">Belum ada data Brand Identify. Silakan klik tombol Tambah.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -79,11 +73,11 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" id="swot_analize">
+                        <table class="table table-hover align-middle mb-0" id="brand_image">
                             <thead class="bg-dark text-white">
                                 <tr style="font-size: 0.85rem;">
                                     <th>No</th>
-                                    <th>Nama</th>
+                                    <th>Brand Image</th>
                                     @if(Auth::user()->role != "content_creator")
                                     <th class="text-center">Aksi</th>
                                     @endif
@@ -124,55 +118,60 @@
 
     <div class="row mb-4">
         <div class="col-lg-12">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-star mr-2"></i>Brand Value</h6>
-                    @if(Auth::user()->role != "content_creator")
-                    <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalValue">
+                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-palette mr-2"></i>Moodboard</h6>
+                    @if(Auth::user()->role != "content_creator" && !$moodboard)
+                    <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalMoodboard">
                         <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                     </button>
                     @endif
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" id="segmentasi">
-                            <thead class="bg-dark text-white">
-                                <tr style="font-size: 0.85rem;">
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                    @if(Auth::user()->role != "content_creator")
-                                    <th class="text-center">Aksi</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody style="font-size: 0.875rem;">
-                                @foreach ($value as $item)
-                                    <tr>
-                                        <th>{{ $loop->iteration }}</th>
-                                        <th>{{ $item->nama_value }}</th>
-                                        @if(Auth::user()->role != "content_creator")
-                                        <th>
-                                            <button class="btn btn-warning btn-sm text-white" 
-                                                    data-toggle="modal" 
-                                                    data-target="#editModalValue_{{ $item->id }}" 
-                                                    title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                            </button>
+                    @if ($moodboard)
+                        {{-- Tampilan saat data ADA --}}
+                        <div class="position-relative text-center">
+                            @if($moodboard->moodboard)
+                                <a href="{{ asset('storage/' . $moodboard->moodboard) }}" target="_blank" class="d-block mb-3">
+                                    <img src="{{ asset('storage/' . $moodboard->moodboard) }}" 
+                                        alt="Brand Identify" 
+                                        class="img-fluid rounded shadow-sm border" 
+                                        style="width: 100%; max-height: 500px; object-fit: contain; background-color: #f8f9fc;">
+                                </a>
+                            @else
+                                <div class="alert alert-light text-center py-5 border">
+                                    <i class="fas fa-image fa-3x text-gray-300 mb-3"></i>
+                                    <p class="text-muted mb-0">File gambar tidak ditemukan</p>
+                                </div>
+                            @endif
 
-                                            {{-- Tombol Hapus --}}
-                                            <button class="btn btn-danger btn-sm" 
-                                                    data-toggle="modal" 
-                                                    data-target="#deleteModalValue_{{ $item->id }}" 
-                                                    title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </th>
-                                        @endif
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                            {{-- Tombol Aksi melayang di pojok kanan atas --}}
+                            @if(Auth::user()->role != "content_creator")
+                                <div class="position-absolute" style="top: 10px; right: 10px;">
+                                    <div class="btn-group shadow-sm">
+                                        <button class="btn btn-warning btn-sm text-white" 
+                                                data-toggle="modal" 
+                                                data-target="#editModalMoodboard_{{ $identify->id }}" 
+                                                title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" 
+                                                data-toggle="modal" 
+                                                data-target="#hapusModalMoodboard_{{ $identify->id }}" 
+                                                title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        {{-- Tampilan saat data KOSONG --}}
+                        <div class="text-center py-5">
+                            <i class="fas fa-folder-open fa-3x text-gray-200 mb-3"></i>
+                            <p class="text-muted">Belum ada data Brand Identify. Silakan klik tombol Tambah.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -191,7 +190,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0" id="tagline">
                             <thead class="bg-info text-white">
                                 <tr style="font-size: 0.85rem;">
                                     <th>No</th>
@@ -207,7 +206,7 @@
                                 <tr>
                                     <th>{{ $loop->iteration }}</th>
                                     <th>{{ $item->nama_tagline }}</th>
-                                    <th>{{ $item->nama_tagline }}</th>
+                                    <th>{{ $item->nama_hashtagline }}</th>
                                     @if(Auth::user()->role != "content_creator")
                                     <th>
                                         <button class="btn btn-warning btn-sm text-white" 
@@ -247,7 +246,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0" id="komunikasi">
                             <thead class="bg-info text-white">
                                 <tr style="font-size: 0.85rem;">
                                     <th>No</th>
@@ -305,12 +304,11 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0" id="komposisi">
                             <thead class="bg-info text-white">
                                 <tr style="font-size: 0.85rem;">
-                                    <th class="pl-4">No</th>
-                                    <th>Type</th>
-                                    <th>Komposisi</th>
+                                    <th class="pl-4 border-right">No</th>
+                                    <th colspan="2" class="text-center border">Komposisi</th>
                                     @if(Auth::user()->role != "content_creator")
                                     <th>Aksi</th>
                                     @endif
@@ -320,8 +318,8 @@
                                 @foreach ($komposisi as $item)
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
-                                        <th>{{ $item->type_komposisi }}</th>
-                                        <th>{{ $item->komposisi }}</th>
+                                        <th class="border-right border-left text-center">{{ $item->type_komposisi }}</th>
+                                        <th class="border-right text-center">{{ $item->komposisi }}</th>
                                         @if(Auth::user()->role != "content_creator")
                                         <th>
                                             <button class="btn btn-warning btn-sm text-white" 
@@ -361,11 +359,11 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0" id="audio">
                             <thead class="bg-info text-white">
                                 <tr style="font-size: 0.85rem;">
                                     <th class="pl-4">No</th>
-                                    <th>Nama</th>
+                                    <th>Audio Branding</th>
                                     @if(Auth::user()->role != "content_creator")
                                     <th>Aksi</th>
                                     @endif
@@ -406,64 +404,55 @@
 
     <div class="row g-4">
         <div class="col-lg-6">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-palette mr-2"></i>Moodboard</h6>
+                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-star mr-2"></i>Brand Value</h6>
                     @if(Auth::user()->role != "content_creator")
-                    <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalMoodboard">
+                    <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambahModalValue">
                         <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah
                     </button>
                     @endif
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-info text-white">
-                            <tr style="font-size: 0.85rem;">
-                                <th>No</th>
-                                <th>Gambar</th>
-                                @if(Auth::user()->role != "content_creator")
-                                <th>Aksi</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($moodboard as $item)
-                            <tr>
-                                <th>{{ $loop->iteration }}</th>
-                                <th>
-                                @if($item->moodboard)
-                                    <a href="{{ asset('storage/' . $item->moodboard) }}" target="_blank">
-                                        <img src="{{ asset('storage/' . $item->moodboard) }}" 
-                                            alt="Moodboard" 
-                                            class="img-thumbnail shadow-sm" 
-                                            style="width: 120px; height: 80px; object-fit: cover;">
-                                    </a>
-                                @else
-                                    <span class="text-muted small">Tidak ada gambar</span>
-                                @endif
-                                </th>
-                                @if(Auth::user()->role != "content_creator")
-                                <th>
-                                    <button class="btn btn-warning btn-sm text-white" 
-                                            data-toggle="modal" 
-                                            data-target="#editModalMoodboard_{{ $item->id }}" 
-                                            title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                    </button>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="segmentasi">
+                            <thead class="bg-info text-white">
+                                <tr style="font-size: 0.85rem;">
+                                    <th>No</th>
+                                    <th>Brand Value</th>
+                                    @if(Auth::user()->role != "content_creator")
+                                    <th class="text-center">Aksi</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody style="font-size: 0.875rem;">
+                                @foreach ($value as $item)
+                                    <tr>
+                                        <th>{{ $loop->iteration }}</th>
+                                        <th>{{ $item->nama_value }}</th>
+                                        @if(Auth::user()->role != "content_creator")
+                                        <th>
+                                            <button class="btn btn-warning btn-sm text-white" 
+                                                    data-toggle="modal" 
+                                                    data-target="#editModalValue_{{ $item->id }}" 
+                                                    title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                            </button>
 
-                                    {{-- Tombol Hapus --}}
-                                    <button class="btn btn-danger btn-sm" 
-                                            data-toggle="modal" 
-                                            data-target="#hapusModalMoodboard_{{ $item->id }}" 
-                                            title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </th>
-                                @endif
-                            @endforeach
-                            </tr>
-                        </tbody>
-                    </table>
+                                            {{-- Tombol Hapus --}}
+                                            <button class="btn btn-danger btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#deleteModalValue_{{ $item->id }}" 
+                                                    title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </th>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -478,11 +467,11 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0" id="alatBranding">
                         <thead class="bg-info text-white">
                             <tr style="font-size: 0.85rem;">
                                 <th>No</th>
-                                <th>Nama</th>
+                                <th>Alat Branding</th>
                                 @if(Auth::user()->role != "content_creator")
                                 <th>Aksi</th>
                                 @endif

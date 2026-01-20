@@ -15,7 +15,7 @@ class brandingController extends Controller
                 ->select("produk_client.nama", 'brand_identify.*')
                 ->where("brand_identify.produk_client_id", $id)
                 ->where("brand_identify.platform", $platform)
-                ->get();
+                ->first();
 
         $image = DB::table('brand_image')
                 ->join('produk_client', 'produk_client.id', '=', 'brand_image.produk_client_id')
@@ -64,7 +64,7 @@ class brandingController extends Controller
                 ->select("produk_client.nama", 'moodboard.*')
                 ->where("moodboard.produk_client_id", $id)
                 ->where("moodboard.platform", $platform)
-                ->get();
+                ->first();
                 
         $alat = DB::table('alat_branding')
                 ->join('produk_client', 'produk_client.id', '=', 'alat_branding.produk_client_id')
