@@ -29,7 +29,7 @@ class ManajemenKontenController extends Controller
         if ($request->filled('end_date')) {
             $query->whereDate('data_jasa.tanggal_posting', '<=', $request->end_date);
         }
-        $data = $query->orderBy('data_jasa.tanggal_posting', 'DESC')->get();
+        $data = $query->orderBy('data_jasa.tanggal_posting', 'ASC')->get();
 
         // LIST TABLE YANG AKAN DIKONDISIKAN
         $table = ['strategy', 'status', 'pilar', 'hooks', 'type_produk', 'jenis_body', 'jenis_cta'];
