@@ -373,7 +373,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td data-order="{{ date('YmdHi', $item['timestamp']) }}">{{ $item['tanggal_posting'] }}</td>
-                                <td><a href="{{ $item['link'] }}" class="text-truncate d-inline-block" style="max-width: 120px;">{{ $item['link'] }}</a></td>
+                                <td><a href="{{ $item['link'] }}" target="_blank" class="text-truncate d-inline-block" style="max-width: 120px;">{{ $item['link'] }}</a></td>
                                 <td style="background-color: rgba(141, 116, 98, {{ $maxLikes ? ($item['likes'] / $maxLikes) * 0.5 : 0}})">
                                     <div class="d-flex align-items-center">
                                         <span class="me-2" style="min-width: 25px;">{{ $item['likes'] }}</span>
