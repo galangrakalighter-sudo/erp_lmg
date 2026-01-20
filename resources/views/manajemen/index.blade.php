@@ -15,7 +15,28 @@
             @endif
         </div>
 
-
+        <div class="card-body">
+            <form action="{{ url()->current() }}" method="GET" class="mb-4">
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <label class="small font-weight-bold">Dari Tanggal:</label>
+                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small font-weight-bold">Sampai Tanggal:</label>
+                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter mr-1"></i> Filter
+                        </button>
+                        <a href="{{ url()->current() }}" class="btn btn-secondary">
+                            <i class="fas fa-undo mr-1"></i> Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
         {{-- CARD BODY --}}
         <div class="card-body">
             <div class="table-responsive">

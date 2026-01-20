@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class ManajemenKontenController extends Controller
 {
-    public function index($produk, $platform){
+    public function index(Request $request, $produk, $platform){
         $nama_produk = DB::table('produk_client')->where('id', $produk)->first();
         $kategory = DB::table("kategori_jasa")->where('id', $nama_produk->kategori_jasa_id)->first();
         
-        $data = DB::table("data_jasa")
+        $query = DB::table("data_jasa")
         ->join('type_produk', 'type_produk.id', '=', 'data_jasa.type_produk_id')
         ->join('strategy', 'strategy.id', '=', 'data_jasa.strategy_id')
         ->join('status', 'status.id', '=', 'data_jasa.status_id')
@@ -21,8 +21,15 @@ class ManajemenKontenController extends Controller
         ->join('jenis_cta', 'jenis_cta.id', '=', 'data_jasa.cta_id')
         ->where('data_jasa.produk_client_id', $produk)
         ->where('data_jasa.platform', $platform)
-        ->select('data_jasa.*', 'type_produk.type', 'strategy.strategy', 'status.nama_status', 'pilar.pilar', 'hooks.hooks', 'jenis_body.nama_body', 'jenis_cta.nama_cta')
-        ->get();
+        ->select('data_jasa.*', 'type_produk.type', 'strategy.strategy', 'status.nama_status', 'pilar.pilar', 'hooks.hooks', 'jenis_body.nama_body', 'jenis_cta.nama_cta');
+        if ($request->filled('start_date')) {
+            $query->whereDate('data_jasa.tanggal_posting', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('data_jasa.tanggal_posting', '<=', $request->end_date);
+        }
+        $data = $query->orderBy('data_jasa.tanggal_posting', 'DESC')->get();
 
         // LIST TABLE YANG AKAN DIKONDISIKAN
         $table = ['strategy', 'status', 'pilar', 'hooks', 'type_produk', 'jenis_body', 'jenis_cta'];
