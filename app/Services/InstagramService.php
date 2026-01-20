@@ -10,11 +10,6 @@ class InstagramService
 {
     protected string $token;
 
-    public function __construct()
-    {
-        $this->token = config('services.instagram.token');
-    }
-
     /**
      * Mengambil media dengan penambahan Timeout 120 detik
      */
