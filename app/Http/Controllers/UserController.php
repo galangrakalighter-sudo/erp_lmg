@@ -53,12 +53,12 @@ class UserController extends Controller
                 $dm_id = null;
                 break;
             case 'digital_marketing':
-                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
+                $hod_id = User::find($request->dmm_id)->hod ?? null;
                 $dmm_id = $request->dmm_id ?? null;
                 $dm_id = null;
                 break;
             case 'content_creator':
-                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
+                $hod_id = User::find($request->dm_id)->hod ?? null;
                 $dmm_id = User::find($request->dm_id)->dmm ?? null;
                 $dm_id =  (int)$request->dm_id ?? null;
                 break;
@@ -68,6 +68,7 @@ class UserController extends Controller
 
         $divisi = Auth::user()->role == "super_admin" ? array_map('intval', (array)$request->divisi) : [(int)Auth::user()->divisi[0]];
         
+        // dd(array_map('intval', (array)$request->divisi)[0]);
         // 3. Simpan ke Database
         $newUser = User::create([
             'name'     => $request->name,
@@ -116,12 +117,12 @@ class UserController extends Controller
                 $dm_id = null;
                 break;
             case 'digital_marketing':
-                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
+                $hod_id = User::find($request->dmm_id)->hod ?? null;
                 $dmm_id = (int)$request->dmm ?? null;
                 $dm_id = null;
                 break;
             case 'content_creator':
-                $hod_id = Auth::user()->role == "head_of_division" ? Auth::user()->id : (int)$request->hod_id;
+                $hod_id = User::find($request->dm_id)->hod ?? null;
                 $dmm_id = User::find($request->dm)->dmm ?? null;
                 $dm_id =  (int)$request->dm ?? null;
                 break;
