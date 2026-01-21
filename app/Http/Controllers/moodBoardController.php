@@ -20,7 +20,7 @@ class moodBoardController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'MoodBoard Harus berupa gambar (JPG, PNG, JPEG) dan maksimal 2MB!');
+                ->with('error', 'MoodBoard Harus berupa gambar (JPG, PNG, JPEG) dan maksimal 5MB!');
         }
 
         // 3. Jika Lolos, Simpan Data
@@ -44,7 +44,7 @@ class moodBoardController extends Controller
 
             if ($validator->fails()) {
                 return redirect()->back()
-                    ->with('error', 'Harus berupa gambar (JPG, PNG, JPEG, WEBP) dan maksimal 2MB!');
+                    ->with('error', 'Harus berupa gambar (JPG, PNG, JPEG, WEBP) dan maksimal 5MB!');
             }
 
             // Hapus foto lama & Simpan yang baru

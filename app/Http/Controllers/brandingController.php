@@ -16,6 +16,7 @@ class brandingController extends Controller
                 ->where("brand_identify.produk_client_id", $id)
                 ->where("brand_identify.platform", $platform)
                 ->first();
+        // dd($platform);
 
         $image = DB::table('brand_image')
                 ->join('produk_client', 'produk_client.id', '=', 'brand_image.produk_client_id')

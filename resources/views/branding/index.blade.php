@@ -151,13 +151,13 @@
                                     <div class="btn-group shadow-sm">
                                         <button class="btn btn-warning btn-sm text-white" 
                                                 data-toggle="modal" 
-                                                data-target="#editModalMoodboard_{{ $identify->id }}" 
+                                                data-target="#editModalMoodboard_{{ $moodboard->id }}" 
                                                 title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="btn btn-danger btn-sm" 
                                                 data-toggle="modal" 
-                                                data-target="#hapusModalMoodboard_{{ $identify->id }}" 
+                                                data-target="#hapusModalMoodboard_{{ $moodboard->id }}" 
                                                 title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
