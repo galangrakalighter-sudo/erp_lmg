@@ -189,7 +189,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 dataTable" id="dataTable">
-                            <thead>
+                            <thead class="text-nowrap">
                                 <tr>
                                     <th class="ps-4">No</th>
                                     <th class="ps-4">Link</th>

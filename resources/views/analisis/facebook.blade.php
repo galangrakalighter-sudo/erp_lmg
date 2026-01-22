@@ -189,11 +189,11 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 dataTable" id="dataTable">
-                            <thead>
+                            <thead class="text-nowrap">
                                 <tr>
                                     <th class="ps-4">No</th>
                                     <th class="ps-4">Link</th>
-                                    <th class="text-center">Tanggal</th>
+                                    <th class="text-center">Tanggal (Y-M-D)</th>
                                     <th class="text-end pe-4">Type</th>
                                     <th class="text-end pe-4">Strategy</th>
                                     <th class="text-end pe-4">Pilar</th>
@@ -344,10 +344,10 @@
             <div class="card card-body h-100">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0" id="insight_2">
-                        <thead class="bg-light">
+                        <thead class="bg-light text-nowrap">
                             <tr class="text-secondary" style="font-size: 0.85rem;">
                                 <th>No</th>
-                                <th>Create Time</th>
+                                <th>Create Time (Y-M-D)</th>
                                 <th>Embed URL</th>
                                 <th>Reaction</th>
                                 <th>Shares</th>

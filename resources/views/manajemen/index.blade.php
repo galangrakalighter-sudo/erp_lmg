@@ -41,7 +41,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center" id="dataTable">
-                    <thead class="thead-light">
+                    <thead class="thead-light text-nowrap">
                         <tr>
                             <th>No</th>
                             <th>Judul</th>
