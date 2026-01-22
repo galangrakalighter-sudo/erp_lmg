@@ -58,8 +58,8 @@
                             @endif
                             <th>Komposisi</th>
                             <th>Note</th>
-                            <th>Tanggal Posting</th>
-                            <th>Tanggal Deadline</th>
+                            <th>Tanggal Posting (Y-M-D)</th>
+                            <th>Tanggal Deadline (Y-M-D)</th>
                             <th>Link</th>
                             <th>Status</th>
                             <th>Action</th>

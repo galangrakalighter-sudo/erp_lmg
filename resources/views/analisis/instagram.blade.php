@@ -193,7 +193,7 @@
                                 <tr>
                                     <th class="ps-4">No</th>
                                     <th class="ps-4">Link</th>
-                                    <th class="text-center">Tanggal</th>
+                                    <th class="text-center">Tanggal (Y-M-D)</th>
                                     <th class="text-end pe-4">Type</th>
                                     <th class="text-end pe-4">Strategy</th>
                                     <th class="text-end pe-4">Pilar</th>
