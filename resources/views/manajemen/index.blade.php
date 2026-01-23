@@ -341,6 +341,7 @@
             <div class="modal-content border-0 shadow-lg">
                 <form action="{{ route('manajemen_update', $item->id) }}" method="POST">
                     @csrf
+                    <input type="hidden" name="platform" value={{ $item->platform }}>
                     <!-- HEADER: Menggunakan gradient orange/warning -->
                     <div class="modal-header bg-gradient-warning text-white py-3">
                         <div class="d-flex align-items-center">
