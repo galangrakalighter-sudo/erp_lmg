@@ -16,7 +16,6 @@ class brandingController extends Controller
                 ->where("brand_identify.produk_client_id", $id)
                 ->where("brand_identify.platform", $platform)
                 ->first();
-        // dd($platform);
 
         $image = DB::table('brand_image')
                 ->join('produk_client', 'produk_client.id', '=', 'brand_image.produk_client_id')
@@ -73,6 +72,8 @@ class brandingController extends Controller
                 ->where("alat_branding.produk_client_id", $id)
                 ->where("alat_branding.platform", $platform)
                 ->get();
+
+        $halaman = "Branding";
         return view('branding.index', compact(
                 "title", 
                 'produk',
@@ -85,7 +86,8 @@ class brandingController extends Controller
                 'audio', 
                 'moodboard',
                 'alat',
-                'platform'
+                'platform',
+                'halaman'
         ));
     }
 }

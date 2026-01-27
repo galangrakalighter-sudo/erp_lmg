@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 class ManajemenKontenController extends Controller
 {
     public function index(Request $request, $produk, $platform){
-        $nama_produk = DB::table('produk_client')->where('id', $produk)->first();
-        $kategory = DB::table("kategori_jasa")->where('id', $nama_produk->kategori_jasa_id)->first();
+        $produk = DB::table('produk_client')->where('id', $produk)->first();
+        $kategory = DB::table("kategori_jasa")->where('id', $produk->kategori_jasa_id)->first();
         
         $query = DB::table("data_jasa")
         ->join('type_produk', 'type_produk.id', '=', 'data_jasa.type_produk_id')
@@ -19,7 +19,7 @@ class ManajemenKontenController extends Controller
         ->join('hooks', 'hooks.id', '=', 'data_jasa.hooks_id')
         ->join('jenis_body', 'jenis_body.id', '=', 'data_jasa.body_id')
         ->join('jenis_cta', 'jenis_cta.id', '=', 'data_jasa.cta_id')
-        ->where('data_jasa.produk_client_id', $produk)
+        ->where('data_jasa.produk_client_id', $produk->id)
         ->where('data_jasa.platform', $platform)
         ->select('data_jasa.*', 'type_produk.type', 'strategy.strategy', 'status.nama_status', 'pilar.pilar', 'hooks.hooks', 'jenis_body.nama_body', 'jenis_cta.nama_cta');
         if ($request->filled('start_date')) {
@@ -36,7 +36,9 @@ class ManajemenKontenController extends Controller
 
         $option = [];
 
-        $title = "Manajemen Konten " . $nama_produk->nama;
+        $title = "Manajemen Konten " . $produk->nama;
+
+        $halaman = "Manajemen Konten";
 
         foreach($table as $tab){
             $datatable = DB::table($tab);
@@ -47,7 +49,7 @@ class ManajemenKontenController extends Controller
             }
             $option[$tab] = $datatable->where('status', 1)->get();
         }
-        return view("manajemen.index", compact('data', 'nama_produk', 'option', 'title', 'kategory', 'platform'));
+        return view("manajemen.index", compact('data', 'produk', 'option', 'title', 'kategory', 'platform', 'halaman'));
     }
 
     public function store($id, Request $request){

@@ -22,8 +22,7 @@ class marketResearchController extends Controller
             array_push($arr, $d);
         }
         $produk = DB::table('produk_client')->where('id', $id)->first();
-        // dd($arr);
-        // dd($data);
-        return view('market.index', compact('data', 'title', 'produk', 'platform'));
+        $halaman = "Market Research";
+        return view('market.index', compact('data', 'title', 'produk', 'platform', 'halaman'));
     }
 }

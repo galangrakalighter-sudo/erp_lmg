@@ -4,7 +4,7 @@
     <div class="card shadow">
         {{-- CARD HEADER --}}
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Manajemen Konten {{ $nama_produk->nama }}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Manajemen Konten {{ $produk->nama }}</h6>
             {{-- <a href="{{ route('create_produk_jasa') }}" class="btn btn-sm btn-primary">
                 Tambah
             </a> --}}
@@ -106,7 +106,7 @@
     <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="tambahModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content border-0 shadow-lg">
-                <form action="{{ route('manajemen_create', $nama_produk->id) }}" method="POST">
+                <form action="{{ route('manajemen_create', $produk->id) }}" method="POST">
                     @csrf
                     <input type="hidden" name="platform" value={{ $platform }}>
                     <!-- HEADER: Menggunakan gradient dan padding yang lebih luas -->

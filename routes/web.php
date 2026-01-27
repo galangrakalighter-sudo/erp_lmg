@@ -21,6 +21,9 @@ Route::middleware('auth')->group(function() {
     // Branding
     Route::get('/branding/{id_produk}/{platform}', [App\Http\Controllers\brandingController::class, 'index'])->name('branding');
     
+    // Export PDF
+    Route::get('/exportPDF/{id}/{halaman}', [App\Http\Controllers\PDFController::class, 'exportPDF'])->name('invoice.download');
+
     // MANAJEMEN USER
     Route::resource('manajemen_user', App\Http\Controllers\UserController::class);
     // Route::get('/manajemen_user', [App\Http\Controllers\UserController::class, 'index'])->name('manajemen_user');
